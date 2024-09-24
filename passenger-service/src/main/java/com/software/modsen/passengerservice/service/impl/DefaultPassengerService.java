@@ -13,6 +13,7 @@ import com.software.modsen.passengerservice.service.PassengerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSENGER_NOT_FOUND_EXCEPTION;
@@ -23,34 +24,29 @@ import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSEN
 @RequiredArgsConstructor
 public class DefaultPassengerService implements PassengerService {
     private final PassengerRepository passengerRepository;
-    private final PassengerMapper passengerMapper;
 
     @Override
-    public PassengerResponse getPassengerById(Long id) {
-        return passengerMapper.toPassengerResponse(getByIdOrElseThrow(id));
+    public Passenger getPassengerById(Long id) {
+        return getByIdOrElseThrow(id);
     }
 
     @Override
-    public PassengerListResponse getAllPassengers() {
-        return new PassengerListResponse(passengerRepository.findAll().stream()
-                .map(passenger -> passengerMapper.toPassengerResponse(passenger))
-                .collect(Collectors.toList()));
+    public List<Passenger> getAllPassengers() {
+        return passengerRepository.findAll();
     }
 
     @Override
-    public PassengerResponse createPassenger(PassengerRequest passengerRequest) {
-        validatePassengerCreate(passengerRequest);
-        Passenger passenger = passengerMapper.toPassengerEntity(passengerRequest);
-        return passengerMapper.toPassengerResponse(passengerRepository.save(passenger));
+    public Passenger createPassenger(Passenger passenger) {
+        validatePassengerCreate(passenger);
+        return passengerRepository.save(passenger);
     }
 
     @Override
-    public PassengerResponse updatePassenger(Long id, PassengerRequest passengerRequest) {
-        Passenger passenger_opt = getByIdOrElseThrow(id);
-        validatePassengerUpdate(passengerRequest, passenger_opt);
-        Passenger passenger = passengerMapper.toPassengerEntity(passengerRequest);
+    public Passenger updatePassenger(Long id, Passenger passenger) {
+        Passenger passengerOptional = getByIdOrElseThrow(id);
+        validatePassengerUpdate(passenger, passengerOptional);
         passenger.setPassengerId(id);
-        return passengerMapper.toPassengerResponse(passengerRepository.save(passenger));
+        return passengerRepository.save(passenger);
     }
 
     @Override
@@ -74,7 +70,7 @@ public class DefaultPassengerService implements PassengerService {
             throw new PhoneAlreadyExistException(String.format(PASSENGER_WITH_PHONE_ALREADY_EXIST_EXCEPTION, phone));
     }
 
-    private void validatePassengerUpdate(PassengerRequest request, Passenger passenger) {
+    private void validatePassengerUpdate(Passenger request, Passenger passenger) {
         if (!request.getEmail().equals(passenger.getEmail())) {
             checkEmailExists(request.getEmail());
         }
@@ -83,7 +79,7 @@ public class DefaultPassengerService implements PassengerService {
         }
     }
 
-    private void validatePassengerCreate(PassengerRequest passengerRequest) {
+    private void validatePassengerCreate(Passenger passengerRequest) {
         checkEmailExists(passengerRequest.getEmail());
         checkPhoneExists(passengerRequest.getPhone());
     }
