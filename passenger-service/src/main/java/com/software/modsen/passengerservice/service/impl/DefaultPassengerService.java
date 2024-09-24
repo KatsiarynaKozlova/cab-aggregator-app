@@ -1,12 +1,9 @@
 package com.software.modsen.passengerservice.service.impl;
 
-import com.software.modsen.passengerservice.dto.request.PassengerRequest;
-import com.software.modsen.passengerservice.dto.response.PassengerListResponse;
-import com.software.modsen.passengerservice.dto.response.PassengerResponse;
 import com.software.modsen.passengerservice.exception.EmailAlreadyExistException;
 import com.software.modsen.passengerservice.exception.PassengerNotFoundException;
 import com.software.modsen.passengerservice.exception.PhoneAlreadyExistException;
-import com.software.modsen.passengerservice.mapper.PassengerMapper;
+import com.software.modsen.passengerservice.kafka.producer.PassengerProducer;
 import com.software.modsen.passengerservice.model.Passenger;
 import com.software.modsen.passengerservice.repository.PassengerRepository;
 import com.software.modsen.passengerservice.service.PassengerService;
@@ -14,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSENGER_NOT_FOUND_EXCEPTION;
 import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSENGER_WITH_EMAIL_ALREADY_EXIST_EXCEPTION;
@@ -24,6 +20,7 @@ import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSEN
 @RequiredArgsConstructor
 public class DefaultPassengerService implements PassengerService {
     private final PassengerRepository passengerRepository;
+    private final PassengerProducer passengerProducer;
 
     @Override
     public Passenger getPassengerById(Long id) {
@@ -36,9 +33,11 @@ public class DefaultPassengerService implements PassengerService {
     }
 
     @Override
-    public Passenger createPassenger(Passenger passenger) {
-        validatePassengerCreate(passenger);
-        return passengerRepository.save(passenger);
+    public Passenger createPassenger(Passenger passengerRequest) {
+        validatePassengerCreate(passengerRequest);
+        Passenger passenger = passengerRepository.save(passengerRequest);
+        passengerProducer.sendPassengerId(passenger.getPassengerId());
+        return passenger;
     }
 
     @Override
