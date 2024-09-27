@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,24 +31,26 @@ public class PassengerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PassengerResponse> getPassengerById(@PathVariable Long id) {
-        return ResponseEntity.ok(passengerMapper.toPassengerResponse(passengerService.getPassengerById(id)));
+        Passenger passenger = passengerService.getPassengerById(id);
+        PassengerResponse passengerResponse = passengerMapper.toPassengerResponse(passenger);
+        return ResponseEntity.ok(passengerResponse);
     }
 
     @GetMapping
     public ResponseEntity<PassengerListResponse> getAllPassengers() {
-        return ResponseEntity.ok(new PassengerListResponse(
-                passengerService.getAllPassengers()
-                        .stream()
-                        .map(passengerMapper::toPassengerResponse)
-                        .collect(Collectors.toList())));
+        List<Passenger> passengerList =  passengerService.getAllPassengers();
+        List<PassengerResponse> passengerResponseList = passengerMapper.toPassengerResponseList(passengerList);
+        return ResponseEntity.ok(new PassengerListResponse(passengerResponseList));
     }
 
     @PostMapping
     public ResponseEntity<PassengerResponse> createPassenger(@RequestBody PassengerRequest passengerRequest) {
-        Passenger passenger = passengerMapper.toPassengerEntity(passengerRequest);
+        Passenger newPassenger = passengerMapper.toPassengerEntity(passengerRequest);
+        Passenger passenger = passengerService.createPassenger(newPassenger);
+        PassengerResponse passengerResponse = passengerMapper.toPassengerResponse(passenger);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(passengerMapper.toPassengerResponse(passengerService.createPassenger(passenger)));
+                .body(passengerResponse);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -61,7 +64,9 @@ public class PassengerController {
             @PathVariable Long id,
             @RequestBody PassengerRequest passengerRequest
     ) {
-        Passenger passenger = passengerMapper.toPassengerEntity(passengerRequest);
-        return ResponseEntity.ok(passengerMapper.toPassengerResponse(passengerService.updatePassenger(id, passenger)));
+        Passenger newPassenger = passengerMapper.toPassengerEntity(passengerRequest);
+        Passenger updatedPassenger = passengerService.updatePassenger(id, newPassenger);
+        PassengerResponse passengerResponse = passengerMapper.toPassengerResponse(updatedPassenger);
+        return ResponseEntity.ok(passengerResponse);
     }
 }
