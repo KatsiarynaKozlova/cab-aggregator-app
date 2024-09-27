@@ -1,5 +1,6 @@
 package com.software.modsen.passengerservice.service.impl;
 
+import com.software.modsen.passengerservice.dto.request.PassengerForRating;
 import com.software.modsen.passengerservice.exception.EmailAlreadyExistException;
 import com.software.modsen.passengerservice.exception.PassengerNotFoundException;
 import com.software.modsen.passengerservice.exception.PhoneAlreadyExistException;
@@ -36,7 +37,8 @@ public class DefaultPassengerService implements PassengerService {
     public Passenger createPassenger(Passenger passengerRequest) {
         validatePassengerCreate(passengerRequest);
         Passenger passenger = passengerRepository.save(passengerRequest);
-        passengerProducer.sendPassengerId(passenger.getPassengerId());
+        PassengerForRating passengerForRating = new PassengerForRating(passenger.getPassengerId());
+        passengerProducer.sendPassengerId(passengerForRating);
         return passenger;
     }
 
