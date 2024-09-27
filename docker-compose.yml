@@ -42,6 +42,14 @@ x-config-driver-microservice:
     - spring.datasource.password=${POSTGRESQL_PASSWORD}
     - spring.datasource.username=${POSTGRESQL_USERNAME}
 
+x-config-rating-microservice:
+  &spring-postgres-rating-database-config
+  environment:
+    - spring.datasource.url=jdbc:postgresql://postgresql:5432/rating_db
+    - eureka.client.service-Url.defaultZone=http://eureka-server:8761/eureka
+    - spring.datasource.password=${POSTGRESQL_PASSWORD}
+    - spring.datasource.username=${POSTGRESQL_USERNAME}
+
 services:
 
   mysqldb:
@@ -95,6 +103,8 @@ services:
       - 8081:8081
     depends_on:
       - mysqldb
+      - eureka-server
+      - kafka
     <<: *spring-database-config
     container_name: passenger_service
     networks:
@@ -111,6 +121,7 @@ services:
       - 8084:8084
     depends_on:
       - postgresql
+      - eureka-server
     <<: *spring-postgres-ride-database-config
     container_name: ride_service
     networks:
@@ -127,8 +138,29 @@ services:
       - 8082:8082
     depends_on:
       - postgresql
+      - eureka-server
+      - kafka
     <<: *spring-postgres-driver-database-config
     container_name: driver-service
+    networks:
+      - app
+
+  rating-service:
+    build:
+      context: ../rating-service
+      dockerfile: ./Dockerfile
+    image: rating-service
+    env_file:
+      - .env
+    ports:
+      - 8083:8083
+    depends_on:
+      - postgresql
+      - eureka-server
+      - kafka
+      - ride-service
+    <<: *spring-postgres-rating-database-config
+    container_name: rating-service
     networks:
       - app
 
