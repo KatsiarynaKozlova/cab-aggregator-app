@@ -1,13 +1,13 @@
 package com.software.modsen.passengerservice.service;
 
-import com.software.modsen.passengerservice.dto.request.PassengerRequest;
-import com.software.modsen.passengerservice.dto.response.PassengerListResponse;
-import com.software.modsen.passengerservice.dto.response.PassengerResponse;
+import com.software.modsen.passengerservice.model.Passenger;
+
+import java.util.List;
 
 public interface PassengerService {
-    PassengerResponse getPassengerById(Long id);
-    PassengerListResponse getAllPassengers();
-    PassengerResponse createPassenger(PassengerRequest passengerRequest);
-    PassengerResponse updatePassenger(Long id, PassengerRequest passengerRequest);
+    Passenger getPassengerById(Long id);
+    List<Passenger> getAllPassengers();
+    Passenger createPassenger(Passenger passengerRequest);
+    Passenger updatePassenger(Long id, Passenger passengerRequest);
     void deletePassenger(Long id);
 }

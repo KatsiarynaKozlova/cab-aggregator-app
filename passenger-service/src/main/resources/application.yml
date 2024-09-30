@@ -6,8 +6,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/passenger_db
-    username: root
-    password: kikoeru
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
   jpa:
     properties:
       hibernate:
@@ -15,3 +15,16 @@ spring:
     show_sql: true
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+    bootstrap-servers: kafka:9092
+    properties:
+      retries: 3
+      linger.ms: 1
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

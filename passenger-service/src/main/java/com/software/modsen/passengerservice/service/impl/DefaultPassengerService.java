@@ -1,19 +1,17 @@
 package com.software.modsen.passengerservice.service.impl;
 
-import com.software.modsen.passengerservice.dto.request.PassengerRequest;
-import com.software.modsen.passengerservice.dto.response.PassengerListResponse;
-import com.software.modsen.passengerservice.dto.response.PassengerResponse;
+import com.software.modsen.passengerservice.dto.request.PassengerForRating;
 import com.software.modsen.passengerservice.exception.EmailAlreadyExistException;
 import com.software.modsen.passengerservice.exception.PassengerNotFoundException;
 import com.software.modsen.passengerservice.exception.PhoneAlreadyExistException;
-import com.software.modsen.passengerservice.mapper.PassengerMapper;
+import com.software.modsen.passengerservice.kafka.producer.PassengerProducer;
 import com.software.modsen.passengerservice.model.Passenger;
 import com.software.modsen.passengerservice.repository.PassengerRepository;
 import com.software.modsen.passengerservice.service.PassengerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSENGER_NOT_FOUND_EXCEPTION;
 import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSENGER_WITH_EMAIL_ALREADY_EXIST_EXCEPTION;
@@ -23,34 +21,33 @@ import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSEN
 @RequiredArgsConstructor
 public class DefaultPassengerService implements PassengerService {
     private final PassengerRepository passengerRepository;
-    private final PassengerMapper passengerMapper;
+    private final PassengerProducer passengerProducer;
 
     @Override
-    public PassengerResponse getPassengerById(Long id) {
-        return passengerMapper.toPassengerResponse(getByIdOrElseThrow(id));
+    public Passenger getPassengerById(Long id) {
+        return getByIdOrElseThrow(id);
     }
 
     @Override
-    public PassengerListResponse getAllPassengers() {
-        return new PassengerListResponse(passengerRepository.findAll().stream()
-                .map(passenger -> passengerMapper.toPassengerResponse(passenger))
-                .collect(Collectors.toList()));
+    public List<Passenger> getAllPassengers() {
+        return passengerRepository.findAll();
     }
 
     @Override
-    public PassengerResponse createPassenger(PassengerRequest passengerRequest) {
+    public Passenger createPassenger(Passenger passengerRequest) {
         validatePassengerCreate(passengerRequest);
-        Passenger passenger = passengerMapper.toPassengerEntity(passengerRequest);
-        return passengerMapper.toPassengerResponse(passengerRepository.save(passenger));
+        Passenger passenger = passengerRepository.save(passengerRequest);
+        PassengerForRating passengerForRating = new PassengerForRating(passenger.getPassengerId());
+        passengerProducer.sendPassengerId(passengerForRating);
+        return passenger;
     }
 
     @Override
-    public PassengerResponse updatePassenger(Long id, PassengerRequest passengerRequest) {
-        Passenger passenger_opt = getByIdOrElseThrow(id);
-        validatePassengerUpdate(passengerRequest, passenger_opt);
-        Passenger passenger = passengerMapper.toPassengerEntity(passengerRequest);
+    public Passenger updatePassenger(Long id, Passenger passenger) {
+        Passenger passengerOptional = getByIdOrElseThrow(id);
+        validatePassengerUpdate(passenger, passengerOptional);
         passenger.setPassengerId(id);
-        return passengerMapper.toPassengerResponse(passengerRepository.save(passenger));
+        return passengerRepository.save(passenger);
     }
 
     @Override
@@ -74,7 +71,7 @@ public class DefaultPassengerService implements PassengerService {
             throw new PhoneAlreadyExistException(String.format(PASSENGER_WITH_PHONE_ALREADY_EXIST_EXCEPTION, phone));
     }
 
-    private void validatePassengerUpdate(PassengerRequest request, Passenger passenger) {
+    private void validatePassengerUpdate(Passenger request, Passenger passenger) {
         if (!request.getEmail().equals(passenger.getEmail())) {
             checkEmailExists(request.getEmail());
         }
@@ -83,7 +80,7 @@ public class DefaultPassengerService implements PassengerService {
         }
     }
 
-    private void validatePassengerCreate(PassengerRequest passengerRequest) {
+    private void validatePassengerCreate(Passenger passengerRequest) {
         checkEmailExists(passengerRequest.getEmail());
         checkPhoneExists(passengerRequest.getPhone());
     }
