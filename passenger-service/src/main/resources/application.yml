@@ -24,6 +24,19 @@ spring:
     properties:
       retries: 3
       linger.ms: 1
+      spring:
+        json:
+          value:
+            default:
+              type: com.software.modsen.ratingservice.dto.request.PassengerForRating
+          add:
+            type:
+              headers:
+                false
+        kafka:
+          consumer:
+            trusted:
+              packages: "*"
 eureka:
   client:
     service-url:
