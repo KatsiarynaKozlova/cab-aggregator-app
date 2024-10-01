@@ -165,6 +165,9 @@ services:
       - app
 
   api-gateway:
+    build:
+      context: ../rating-service
+      dockerfile: ./Dockerfile
     image: api-gateway
     container_name: gateway-service
     networks:
