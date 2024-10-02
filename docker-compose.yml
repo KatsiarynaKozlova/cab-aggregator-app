@@ -164,6 +164,19 @@ services:
     networks:
       - app
 
+  api-gateway:
+    build:
+      context: ../rating-service
+      dockerfile: ./Dockerfile
+    image: api-gateway
+    container_name: gateway-service
+    networks:
+      - app
+    depends_on:
+      - eureka-server
+    ports:
+      - 8080:8080
+
   kafka:
     image: 'bitnami/kafka:3.7.0'
     container_name: kafka

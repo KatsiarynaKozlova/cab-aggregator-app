@@ -24,6 +24,8 @@ spring:
     properties:
       retries: 3
       linger.ms: 1
+      spring:
+        spring.json.add.type.headers: false
 eureka:
   client:
     service-url:

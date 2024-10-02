@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: passengers
+          uri: lb://PassengerService
+          predicates:
+            - Path=/passengers/**
+        - id: drivers
+          uri: lb://DriverService
+          predicates:
+            - Path=/drivers/**
+        - id: ratings
+          uri: lb://RatingService
+          predicates:
+            - Path=/ratings/*
+        - id: rides
+          uri: lb://RideService
+          predicates:
+            - Path=/rides/**
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-Url:
+      defaultZone: http://localhost:8761/eureka
