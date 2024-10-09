@@ -166,9 +166,10 @@ services:
 
   api-gateway:
     build:
-      context: ../rating-service
+      context: api-gateway
       dockerfile: ./Dockerfile
     image: api-gateway
+    <<: *spring-config
     container_name: gateway-service
     networks:
       - app
@@ -203,7 +204,7 @@ services:
 
 networks:
   app:
-    name: cab-aggregation
+    driver: bridge
 
 volumes:
   kafka_data:

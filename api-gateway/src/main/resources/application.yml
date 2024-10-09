@@ -9,19 +9,20 @@ spring:
           lower-case-service-id: true
       routes:
         - id: passengers
-          uri: lb://PassengerService
+          uri: lb://Passenger-Service
           predicates:
             - Path=/passengers/**
         - id: drivers
-          uri: lb://DriverService
+          uri: lb://Driver-Service
           predicates:
             - Path=/drivers/**
+            - Path=/cars/**
         - id: ratings
-          uri: lb://RatingService
+          uri: lb://Rating-Service
           predicates:
             - Path=/ratings/*
         - id: rides
-          uri: lb://RideService
+          uri: lb://Ride-Service
           predicates:
             - Path=/rides/**
 eureka:
@@ -30,3 +31,19 @@ eureka:
   client:
     service-Url:
       defaultZone: http://localhost:8761/eureka
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 20
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 20
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 1s
+        permittedNumberOfCallsInHalfOpenState: 20
+        slidingWindowSize: 20
+        slidingWindowType: COUNT_BASED
+    instances:
+      rating-service-circuit:
+        baseConfig: default
