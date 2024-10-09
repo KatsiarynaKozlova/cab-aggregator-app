@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,7 +46,7 @@ public class PassengerServiceUnitTest {
     @ParameterizedTest
     @CsvSource("1")
     void getPassengerById_shouldReturnPassenger(Long id) {
-        when(passengerRepository.findById(id)).thenReturn(Optional.of(defaultMockPassenger));
+        when(passengerRepository.findById(anyLong())).thenReturn(Optional.of(defaultMockPassenger));
 
         Passenger passenger = passengerService.getPassengerById(id);
 
@@ -99,7 +99,7 @@ public class PassengerServiceUnitTest {
     @ParameterizedTest
     @CsvSource("email@email.com")
     void createPassenger_shouldThrowEmailAlreadyExistException(String email) {
-        when(passengerRepository.existsByEmail(email)).thenThrow(EmailAlreadyExistException.class);
+        when(passengerRepository.existsByEmail(anyString())).thenThrow(EmailAlreadyExistException.class);
         assertThrows(
                 EmailAlreadyExistException.class,
                 () -> passengerService.createPassenger(defaultMockPassenger)
@@ -111,7 +111,7 @@ public class PassengerServiceUnitTest {
     @ParameterizedTest
     @CsvSource("1234567890")
     void createPassenger_shouldThrowPhoneAlreadyExistException(String phone) {
-        when(passengerRepository.existsByPhone(phone)).thenThrow(PhoneAlreadyExistException.class);
+        when(passengerRepository.existsByPhone(anyString())).thenThrow(PhoneAlreadyExistException.class);
         assertThrows(
                 PhoneAlreadyExistException.class,
                 () -> passengerService.createPassenger(defaultMockPassenger)
@@ -123,7 +123,7 @@ public class PassengerServiceUnitTest {
     @ParameterizedTest
     @CsvSource("1")
     void updatePassengerById_shouldReturnPassenger(Long id) {
-        when(passengerRepository.findById(id)).thenReturn(Optional.of(defaultMockPassenger));
+        when(passengerRepository.findById(anyLong())).thenReturn(Optional.of(defaultMockPassenger));
         when(passengerRepository.save(any(Passenger.class))).thenReturn(defaultMockPassenger);
 
         Passenger updatedPassenger = passengerService.updatePassenger(id, defaultMockPassenger);
@@ -144,7 +144,7 @@ public class PassengerServiceUnitTest {
     @ParameterizedTest
     @CsvSource("1234567890")
     void updatePassenger_shouldThrowPhoneAlreadyExistException(String phone) {
-        when(passengerRepository.existsByPhone(phone)).thenThrow(PhoneAlreadyExistException.class);
+        when(passengerRepository.existsByPhone(anyString())).thenThrow(PhoneAlreadyExistException.class);
         assertThrows(
                 PhoneAlreadyExistException.class,
                 () -> passengerService.createPassenger(defaultMockPassenger)
@@ -159,7 +159,7 @@ public class PassengerServiceUnitTest {
         updatedPassenger.setEmail(email);
 
         when(passengerRepository.findById(defaultMockPassenger.getPassengerId())).thenReturn(Optional.of(defaultMockPassenger));
-        when(passengerRepository.existsByEmail(email)).thenReturn(true);
+        when(passengerRepository.existsByEmail(anyString())).thenReturn(true);
 
         assertThrows(
                 EmailAlreadyExistException.class,
@@ -179,7 +179,7 @@ public class PassengerServiceUnitTest {
         updatedPassenger.setEmail(defaultMockPassenger.getEmail());
 
         when(passengerRepository.findById(defaultMockPassenger.getPassengerId())).thenReturn(Optional.of(defaultMockPassenger));
-        when(passengerRepository.existsByPhone(phone)).thenReturn(true);
+        when(passengerRepository.existsByPhone(anyString())).thenReturn(true);
 
         assertThrows(
                 PhoneAlreadyExistException.class,
@@ -201,7 +201,7 @@ public class PassengerServiceUnitTest {
     @ParameterizedTest
     @CsvSource("1")
     void testUpdatePassenger_PassengerNotFound(Long id) {
-        when(passengerRepository.findById(id)).thenReturn(Optional.empty());
+        when(passengerRepository.findById(anyLong())).thenReturn(Optional.empty());
         assertThrows(
                 PassengerNotFoundException.class,
                 () -> passengerService.updatePassenger(id, defaultMockPassenger)
