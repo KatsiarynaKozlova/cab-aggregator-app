@@ -4,14 +4,14 @@ spring:
   application:
     name: passenger-service
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/passenger_db
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/passenger_db
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     show_sql: true
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
@@ -26,6 +26,8 @@ spring:
       linger.ms: 1
       spring.json.add.type.headers: false
 eureka:
+  instance:
+    hostname: passenger-service
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
