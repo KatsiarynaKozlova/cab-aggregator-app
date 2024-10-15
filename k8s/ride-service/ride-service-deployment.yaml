@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ride-service
+  labels:
+    app: ride-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ride-service
+  template:
+    metadata:
+      labels:
+        app: ride-service
+      name: ride-service
+    spec:
+      containers:
+        - name: ride-service
+          image: katsiarynakozlova/ride-service:v1.0
+          ports:
+            - containerPort: 8084
+              name: ride-service
+          env:
+            - name: POSTGRESQL_USERNAME
+              value: root
+            - name: POSTGRESQL_PASSWORD
+              value: persik
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgresql:5432/ride_db"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka"
