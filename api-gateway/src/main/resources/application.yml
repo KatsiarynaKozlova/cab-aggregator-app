@@ -9,20 +9,20 @@ spring:
           lower-case-service-id: true
       routes:
         - id: passengers
-          uri: lb://Passenger-Service
+          uri: lb://passenger-service
           predicates:
             - Path=/passengers/**
         - id: drivers
-          uri: lb://Driver-Service
+          uri: lb://driver-service
           predicates:
             - Path=/drivers/**
             - Path=/cars/**
         - id: ratings
-          uri: lb://Rating-Service
+          uri: lb://rating-service
           predicates:
-            - Path=/ratings/*
+            - Path=/ratings/**
         - id: rides
-          uri: lb://Ride-Service
+          uri: lb://ride-service
           predicates:
             - Path=/rides/**
 eureka:

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: passenger-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: passenger-service
+  template:
+    metadata:
+      labels:
+        app: passenger-service
+    spec:
+      containers:
+        - name: passenger-service
+          image: katsiarynakozlova/passenger-service:v1.0
+          ports:
+            - containerPort: 8081
+          env:
+            - name: eureka.client.service-Url.defaultZone
+              value: http://eureka-server:8761/eureka
+            - name: spring.datasource.password
+              value: persik
+            - name: spring.datasource.url
+              value: jdbc:postgresql://postgresql:5432/passenger_db
+            - name: spring.datasource.username
+              value: root

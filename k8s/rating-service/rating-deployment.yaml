@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-service
+  labels:
+    app: rating-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rating-service
+  template:
+    metadata:
+      labels:
+        app: rating-service
+      name: rating-service
+    spec:
+      containers:
+        - name: rating-service
+          image: katsiarynakozlova/rating-service:v1.0
+          ports:
+            - containerPort: 8083
+              name: rating-service
+          env:
+            - name: POSTGRESQL_USERNAME
+              value: root
+            - name: POSTGRESQL_PASSWORD
+              value: persik
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgresql:5432/rating_db"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka"
