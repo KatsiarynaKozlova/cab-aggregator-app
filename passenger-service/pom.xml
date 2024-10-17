@@ -27,6 +27,7 @@
         <testcontainers.version>1.20.2</testcontainers.version>
         <commons-compress.version>1.27.1</commons-compress.version>
         <cucumber.version>7.19.0</cucumber.version>
+        <micrometer-registry-prometheus.version>1.13.6</micrometer-registry-prometheus.version>
     </properties>
     <dependencies>
         <dependency>
@@ -153,6 +154,15 @@
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-spring</artifactId>
             <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>${micrometer-registry-prometheus.version}</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
