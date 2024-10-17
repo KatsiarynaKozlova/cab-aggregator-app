@@ -10,5 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class PassengerListResponse {
-    private List<PassengerResponse> passengerResponseList;
+    private List<PassengerResponse> items;
 }
