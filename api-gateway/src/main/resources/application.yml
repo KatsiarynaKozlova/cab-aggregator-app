@@ -21,6 +21,11 @@ spring:
           uri: lb://rating-service
           predicates:
             - Path=/ratings/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: payment-service-circuit
+                fallbackUri: forward:/fallback/rating-service
         - id: rides
           uri: lb://ride-service
           predicates:
