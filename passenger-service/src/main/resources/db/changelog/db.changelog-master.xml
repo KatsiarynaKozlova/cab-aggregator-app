@@ -13,4 +13,11 @@
     <changeSet id="3" author="Katsiaryna">
         <tagDatabase tag="v1"/>
     </changeSet>
+    <changeSet id="4" author="Katsiaryna">
+        <tagDatabase tag="refactore_db"/>
+    </changeSet>
+    <include file="v2/db.changelog-v2.xml" relativeToChangelogFile="true"/>
+    <changeSet id="6" author="Katsiaryna">
+        <tagDatabase tag="v2"/>
+    </changeSet>
 </databaseChangeLog>
