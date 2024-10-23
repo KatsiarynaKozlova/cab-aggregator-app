@@ -2,6 +2,7 @@ package com.software.modsen.passengerservice.exception.handler;
 
 import com.software.modsen.passengerservice.exception.EmailAlreadyExistException;
 import com.software.modsen.passengerservice.exception.PassengerNotFoundException;
+import com.software.modsen.passengerservice.exception.PassengerUpdateLockException;
 import com.software.modsen.passengerservice.exception.PhoneAlreadyExistException;
 import org.modelmapper.spi.ErrorMessage;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class ExceptionApiHandler {
                 .body(new ErrorMessage(exception.getMessage()));
     }
 
-    @ExceptionHandler({EmailAlreadyExistException.class, PhoneAlreadyExistException.class})
+    @ExceptionHandler({EmailAlreadyExistException.class, PhoneAlreadyExistException.class, PassengerUpdateLockException.class})
     public ResponseEntity<ErrorMessage> emailExistException(Exception exception){
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)

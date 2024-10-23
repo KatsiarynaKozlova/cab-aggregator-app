@@ -3,11 +3,14 @@ package com.software.modsen.passengerservice.service.impl;
 import com.software.modsen.passengerservice.dto.request.PassengerForRating;
 import com.software.modsen.passengerservice.exception.EmailAlreadyExistException;
 import com.software.modsen.passengerservice.exception.PassengerNotFoundException;
+import com.software.modsen.passengerservice.exception.PassengerUpdateLockException;
 import com.software.modsen.passengerservice.exception.PhoneAlreadyExistException;
 import com.software.modsen.passengerservice.kafka.producer.PassengerProducer;
 import com.software.modsen.passengerservice.model.Passenger;
 import com.software.modsen.passengerservice.repository.PassengerRepository;
 import com.software.modsen.passengerservice.service.PassengerService;
+import com.software.modsen.passengerservice.util.ExceptionMessages;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +50,11 @@ public class DefaultPassengerService implements PassengerService {
         Passenger passengerOptional = getByIdOrElseThrow(id);
         validatePassengerUpdate(passenger, passengerOptional);
         passenger.setPassengerId(id);
-        return passengerRepository.save(passenger);
+        try {
+            return passengerRepository.save(passenger);
+        } catch(OptimisticLockException e){
+            throw new PassengerUpdateLockException(ExceptionMessages.TRY_AGAIN_LATER);
+        }
     }
 
     @Override
