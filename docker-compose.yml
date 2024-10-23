@@ -1,12 +1,5 @@
 version: "0.1"
 
-x-mysql-database-config-data:
-  &mysql-connection-data
-  environment:
-    - SPRING_DATASOURCE_PLATFORM=mysql
-    - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
-    - MYSQL_DATABASE=passenger_db
-
 x-postgresql-database-config-data:
   &postgesql-connection-data
   environment:
