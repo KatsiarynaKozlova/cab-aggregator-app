@@ -9,7 +9,6 @@ databaseChangeLog:
               - column:
                   name: version
                   type: int
-                  defaultValue: 1
       rollback:
         - dropColumn:
             columnName: version
