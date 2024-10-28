@@ -30,6 +30,9 @@ spring:
           uri: lb://ride-service
           predicates:
             - Path=/rides/**
+logging:
+  level:
+    org.springframework.security: DEBUG
 eureka:
   instance:
     prefer-ip-address: true
