@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash-deployment
+  labels:
+    app: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+        - name: logstash
+          image: logstash:8.15.0
+          ports:
+            - containerPort: 5000
+          env:
+            - name: LS_JAVA_OPTS
+              value: "-Xmx256m -Xms256m"
+          volumeMounts:
+            - name: logstash-config-volume
+              mountPath: /usr/share/logstash/pipeline/logstash.conf
+              subPath: logstash.conf
+      volumes:
+        - name: logstash-config-volume
+          configMap:
+            name: logstash-config
