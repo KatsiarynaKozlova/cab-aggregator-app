@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: Katsiaryna
+      changes:
+        - addColumn:
+            tableName: passengers
+            columns:
+              - column:
+                  name: version
+                  type: int
+      rollback:
+        - dropColumn:
+            columnName: version
+            tableName: passengers

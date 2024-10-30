@@ -9,4 +9,5 @@ public class ExceptionMessages {
             "passenger with email '%s' already exists";
     public static final String PASSENGER_WITH_PHONE_ALREADY_EXIST_EXCEPTION =
             "passenger with phone '%s' already exists";
+    public static final String TRY_AGAIN_LATER = "Please try again later";
 }
