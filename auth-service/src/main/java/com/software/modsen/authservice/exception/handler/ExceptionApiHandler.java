@@ -1,0 +1,18 @@
+package com.software.modsen.authservice.exception.handler;
+
+import com.software.modsen.authservice.exception.UserAlreadyExistException;
+import org.modelmapper.spi.ErrorMessage;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class ExceptionApiHandler {
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<ErrorMessage> emailExistException(Exception exception){
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ErrorMessage(exception.getMessage()));
+    }
+}

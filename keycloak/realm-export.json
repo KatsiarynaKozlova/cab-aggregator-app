@@ -27,7 +27,7 @@
   "oauth2DevicePollingInterval": 5,
   "enabled": true,
   "sslRequired": "external",
-  "registrationAllowed": false,
+  "registrationAllowed": true,
   "registrationEmailAsUsername": false,
   "rememberMe": false,
   "verifyEmail": false,
@@ -47,9 +47,27 @@
   "roles": {
     "realm": [
       {
+        "id": "6392bb17-c88e-47e1-901d-cf1902019f5e",
+        "name": "ADMIN",
+        "description": "",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "3f2e5b0c-f617-43b3-978d-3dcaf7004abb",
+        "attributes": {}
+      },
+      {
         "id": "a4f672e6-5994-47c2-879c-dd7691a48cc1",
         "name": "offline_access",
         "description": "${role_offline-access}",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "3f2e5b0c-f617-43b3-978d-3dcaf7004abb",
+        "attributes": {}
+      },
+      {
+        "id": "0ef6cf0b-60d7-4e46-8b8a-e224463d755c",
+        "name": "PASSENGER",
+        "description": "",
         "composite": false,
         "clientRole": false,
         "containerId": "3f2e5b0c-f617-43b3-978d-3dcaf7004abb",
@@ -71,6 +89,7 @@
         "composite": true,
         "composites": {
           "realm": [
+            "default-roles-cab-aggregator-realm",
             "offline_access",
             "uma_authorization"
           ],
@@ -81,6 +100,15 @@
             ]
           }
         },
+        "clientRole": false,
+        "containerId": "3f2e5b0c-f617-43b3-978d-3dcaf7004abb",
+        "attributes": {}
+      },
+      {
+        "id": "b1d817c2-dc27-48e8-9a70-bdd9e695e53d",
+        "name": "DRIVER",
+        "description": "",
+        "composite": false,
         "clientRole": false,
         "containerId": "3f2e5b0c-f617-43b3-978d-3dcaf7004abb",
         "attributes": {}
@@ -301,7 +329,60 @@
       ],
       "security-admin-console": [],
       "admin-cli": [],
-      "spring-gateway-client": [],
+      "spring-gateway-client": [
+        {
+          "id": "51441ee2-7f6d-42e1-a656-b9f0803a05bf",
+          "name": "DRIVER",
+          "description": "",
+          "composite": true,
+          "composites": {
+            "realm": [
+              "DRIVER"
+            ]
+          },
+          "clientRole": true,
+          "containerId": "a8a7152a-d8c9-4b88-8abb-5ebb2b9ad62f",
+          "attributes": {}
+        },
+        {
+          "id": "b3c078dc-ac3e-4fbe-86c4-2007a8c860ac",
+          "name": "ADMIN",
+          "description": "",
+          "composite": true,
+          "composites": {
+            "realm": [
+              "DRIVER",
+              "ADMIN",
+              "PASSENGER"
+            ]
+          },
+          "clientRole": true,
+          "containerId": "a8a7152a-d8c9-4b88-8abb-5ebb2b9ad62f",
+          "attributes": {}
+        },
+        {
+          "id": "d12f9064-d594-4a4c-8888-9d848ecfe236",
+          "name": "uma_protection",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "a8a7152a-d8c9-4b88-8abb-5ebb2b9ad62f",
+          "attributes": {}
+        },
+        {
+          "id": "04ac16f3-3f18-4a86-9c49-31277cf28f58",
+          "name": "PASSENGER",
+          "description": "",
+          "composite": true,
+          "composites": {
+            "realm": [
+              "PASSENGER"
+            ]
+          },
+          "clientRole": true,
+          "containerId": "a8a7152a-d8c9-4b88-8abb-5ebb2b9ad62f",
+          "attributes": {}
+        }
+      ],
       "account-console": [],
       "broker": [
         {
@@ -469,8 +550,19 @@
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
-        "default-roles-cab-aggregator-realm"
+        "ADMIN",
+        "PASSENGER",
+        "default-roles-cab-aggregator-realm",
+        "DRIVER"
       ],
+      "clientRoles": {
+        "realm-management": [
+          "realm-admin"
+        ],
+        "spring-gateway-client": [
+          "uma_protection"
+        ]
+      },
       "notBefore": 0,
       "groups": []
     }
@@ -1669,6 +1761,18 @@
         "config": {}
       }
     ],
+    "org.keycloak.userprofile.UserProfileProvider": [
+      {
+        "id": "abde947e-d6cc-42aa-bcd6-d006456059f9",
+        "providerId": "declarative-user-profile",
+        "subComponents": {},
+        "config": {
+          "kc.user.profile.config": [
+            "{\"attributes\":[{\"name\":\"username\",\"displayName\":\"${username}\",\"validations\":{\"length\":{\"min\":3,\"max\":255},\"username-prohibited-characters\":{},\"up-username-not-idn-homograph\":{}},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"email\",\"displayName\":\"${email}\",\"validations\":{\"email\":{},\"length\":{\"max\":255}},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"phone\",\"displayName\":\"${phone}\",\"validations\":{},\"annotations\":{},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false}],\"groups\":[{\"name\":\"user-metadata\",\"displayHeader\":\"User metadata\",\"displayDescription\":\"Attributes, which refer to user metadata\"}]}"
+          ]
+        }
+      }
+    ],
     "org.keycloak.keys.KeyProvider": [
       {
         "id": "7ae31b24-154d-429c-a8a7-852768f4dd8f",
@@ -2456,13 +2560,18 @@
   "firstBrokerLoginFlow": "first broker login",
   "attributes": {
     "cibaBackchannelTokenDeliveryMode": "poll",
-    "cibaExpiresIn": "120",
     "cibaAuthRequestedUserHint": "login_hint",
-    "oauth2DeviceCodeLifespan": "600",
     "oauth2DevicePollingInterval": "5",
-    "parRequestUriLifespan": "60",
+    "clientOfflineSessionMaxLifespan": "0",
+    "clientSessionIdleTimeout": "0",
+    "clientOfflineSessionIdleTimeout": "0",
     "cibaInterval": "5",
-    "realmReusableOtpCode": "false"
+    "realmReusableOtpCode": "false",
+    "cibaExpiresIn": "120",
+    "oauth2DeviceCodeLifespan": "600",
+    "parRequestUriLifespan": "60",
+    "clientSessionMaxLifespan": "0",
+    "organizationsEnabled": "false"
   },
   "keycloakVersion": "26.0.1",
   "userManagedAccessAllowed": false,

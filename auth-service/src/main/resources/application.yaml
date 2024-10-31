@@ -1,0 +1,40 @@
+server:
+  port: 8099
+spring:
+  application:
+    name: auth-service
+  security:
+     oauth2:
+       client:
+         registration:
+           keycloak:
+             provider: keycloak
+             client-id: spring-gateway-client
+             client-secret: ADQ9gpuhamewOvJgYmg6iUgwPExSqSyu
+             authorization-grant-type: password
+             redirect-uri: '{baseUrl}/login/oauth2/code/keycloak'
+             scope: openid, profile, email
+         provider:
+           keycloak:
+             issuer-uri: http://localhost:8100/realms/cab-aggregator-realm
+       resourceserver:
+          jwt:
+            issuer-uri: http://localhost:8100/realms/cab-aggregator-realm
+            jwk-set-uri: http://localhost:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
+
+keycloak:
+  server-url: http://localhost:8100
+  realm: cab-aggregator-realm
+  resource: spring-gateway-client
+  bearer-only: true
+  client_id: spring-gateway-client
+  secret: ADQ9gpuhamewOvJgYmg6iUgwPExSqSyu
+  admin_username: admin
+  admin_password: admin
+
+eureka:
+  instance:
+    hostname: passenger-service
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
