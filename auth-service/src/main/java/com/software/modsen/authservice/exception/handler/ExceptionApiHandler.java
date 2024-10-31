@@ -2,6 +2,7 @@ package com.software.modsen.authservice.exception.handler;
 
 import com.software.modsen.authservice.exception.ServiceUnAvailableException;
 import com.software.modsen.authservice.exception.UserAlreadyExistException;
+import com.software.modsen.authservice.exception.WrongCredentialsException;
 import org.modelmapper.spi.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,13 @@ public class ExceptionApiHandler {
     public ResponseEntity<ErrorMessage> handleBadRequestException(RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(WrongCredentialsException.class)
+    public ResponseEntity<ErrorMessage> handleUnauthorizedException(RuntimeException exception) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorMessage(exception.getMessage()));
     }
 }
