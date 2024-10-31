@@ -1,12 +1,12 @@
 package com.software.modsen.authservice.service;
 
+import com.software.modsen.authservice.exception.ServiceUnAvailableException;
 import com.software.modsen.authservice.exception.UserAlreadyExistException;
+import com.software.modsen.authservice.exception.WrongCredentialsException;
 import com.software.modsen.authservice.model.User;
 import com.software.modsen.authservice.model.UserLogin;
 import com.software.modsen.authservice.util.ExceptionMessages;
-import com.software.modsen.authservice.util.KeycloakConstants;
 import jakarta.ws.rs.core.Response;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
@@ -22,8 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.software.modsen.authservice.util.KeycloakConstants.*;
-
+import static com.software.modsen.authservice.util.ExceptionMessages.UNAUTHORIZED_EXCEPTION;
+import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_ADMIN_PASSWORD;
+import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_ADMIN_USERNAME;
+import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_CLIENT_ID;
+import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_CLIENT_SECRET;
+import static com.software.modsen.authservice.util.KeycloakConstants.LOCATION;
+import static com.software.modsen.authservice.util.KeycloakConstants.PHONE;
+import static com.software.modsen.authservice.util.KeycloakConstants.REALM;
+import static com.software.modsen.authservice.util.KeycloakConstants.SERVER_URL;
 
 @Slf4j
 @Service
@@ -58,12 +65,14 @@ public class KeycloakService {
 
         } catch (UserAlreadyExistException e) {
             throw new UserAlreadyExistException(e.getMessage());
+        } catch (Exception e) {
+            throw new ServiceUnAvailableException(ExceptionMessages.SERVICE_IS_NOT_AVAILABLE);
         }
+        // TODO  Define more exceptions
         return user;
     }
 
-    public AccessTokenResponse getUserToken(UserLogin userLogin){
-        log.info(userLogin.getUsername()+" "+userLogin.getPassword());
+    public AccessTokenResponse getUserToken(UserLogin userLogin) {
         try {
             return KeycloakBuilder.builder()
                     .serverUrl(SERVER_URL)
@@ -76,9 +85,8 @@ public class KeycloakService {
                     .build()
                     .tokenManager()
                     .getAccessToken();
-        } catch (Exception e){
-            log.info(userLogin.getUsername()+" "+userLogin.getPassword());
-            throw new UserAlreadyExistException(e.getMessage());
+        } catch (Exception e) {
+            throw new WrongCredentialsException(UNAUTHORIZED_EXCEPTION);
         }
     }
 

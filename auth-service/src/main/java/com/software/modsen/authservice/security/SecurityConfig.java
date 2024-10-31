@@ -24,12 +24,9 @@ public class SecurityConfig {
         http .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/auth/**").permitAll()
         );
-
         http
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)));
         http
-
-                // Disable the default login page and OAuth2 login flow
                 .oauth2Login(OAuth2LoginConfigurer::disable);
 
         return http.build();

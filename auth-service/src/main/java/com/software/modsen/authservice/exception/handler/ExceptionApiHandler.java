@@ -1,5 +1,6 @@
 package com.software.modsen.authservice.exception.handler;
 
+import com.software.modsen.authservice.exception.ServiceUnAvailableException;
 import com.software.modsen.authservice.exception.UserAlreadyExistException;
 import org.modelmapper.spi.ErrorMessage;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,13 @@ public class ExceptionApiHandler {
     public ResponseEntity<ErrorMessage> emailExistException(Exception exception){
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
+                .body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(ServiceUnAvailableException.class)
+    public ResponseEntity<ErrorMessage> handleBadRequestException(RuntimeException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorMessage(exception.getMessage()));
     }
 }
