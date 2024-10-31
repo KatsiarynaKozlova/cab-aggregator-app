@@ -62,7 +62,7 @@ public class DefaultPassengerService implements PassengerService {
         try {
             Passenger updatedPassenger = passengerRepository.save(passenger);
             log.info(String.format(LogInfoMessages.UPDATE_PASSENGER, id));
-            return passengerRepository.save(passenger);
+            return passengerRepository.save(updatedPassenger);
         } catch (OptimisticLockException e) {
             throw new PassengerUpdateLockException(ExceptionMessages.TRY_AGAIN_LATER);
         }
