@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,4 +35,6 @@ public class Passenger {
     private String phone;
     @Column(name = "is_deleted")
     private boolean deleted = Boolean.FALSE;
+    @Version
+    private int version;
 }
