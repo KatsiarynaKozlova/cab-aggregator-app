@@ -1,5 +1,6 @@
 package com.software.modsen.authservice.exception.handler;
 
+import com.software.modsen.authservice.exception.InvalidUserDataException;
 import com.software.modsen.authservice.exception.ServiceUnAvailableException;
 import com.software.modsen.authservice.exception.UserAlreadyExistException;
 import com.software.modsen.authservice.exception.WrongCredentialsException;
@@ -12,13 +13,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionApiHandler {
     @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<ErrorMessage> emailExistException(Exception exception){
+    public ResponseEntity<ErrorMessage> emailExistException(Exception exception) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new ErrorMessage(exception.getMessage()));
     }
 
-    @ExceptionHandler(ServiceUnAvailableException.class)
+    @ExceptionHandler({InvalidUserDataException.class, ServiceUnAvailableException.class})
     public ResponseEntity<ErrorMessage> handleBadRequestException(RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

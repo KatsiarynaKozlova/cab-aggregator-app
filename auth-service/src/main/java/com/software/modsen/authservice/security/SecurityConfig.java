@@ -21,9 +21,8 @@ public class SecurityConfig {
         http
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/**").permitAll()
-        );
+        http
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/auth/**").permitAll());
         http
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)));
         http

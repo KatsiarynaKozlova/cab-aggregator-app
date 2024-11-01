@@ -15,7 +15,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static com.software.modsen.authservice.util.KeycloakConstants.*;
+import static com.software.modsen.authservice.util.KeycloakConstants.PREFIX_ROLE;
+import static com.software.modsen.authservice.util.KeycloakConstants.REALM_ACCESS;
+import static com.software.modsen.authservice.util.KeycloakConstants.ROLES;
 
 @Component
 public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
@@ -29,8 +31,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         if (jwt.getClaim(REALM_ACCESS) != null) {
             Map<String, Object> realmAccess = jwt.getClaim(REALM_ACCESS);
             ObjectMapper mapper = new ObjectMapper();
-            List<String> keycloakRoles = mapper.convertValue(realmAccess.get(ROLES), new TypeReference<List<String>>() {
-            });
+            List<String> keycloakRoles = mapper.convertValue(realmAccess.get(ROLES), new TypeReference<List<String>>() {});
             List<GrantedAuthority> roles = new ArrayList<>();
 
             for (String keyCloakRole : keycloakRoles) {

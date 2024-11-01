@@ -2,6 +2,7 @@ package com.software.modsen.authservice.controller;
 
 import com.software.modsen.authservice.dto.request.UserLoginRequest;
 import com.software.modsen.authservice.dto.request.UserRequest;
+import com.software.modsen.authservice.dto.response.UserResponse;
 import com.software.modsen.authservice.mapper.UserLoginMapper;
 import com.software.modsen.authservice.mapper.UserMapper;
 import com.software.modsen.authservice.model.User;
@@ -25,10 +26,11 @@ public class AuthController {
     private final UserLoginMapper userLoginMapper;
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody UserRequest userRequest)
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest)
     {
         User user = userMapper.toUserModel(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(keycloakUserService.createUser(user));
+        UserResponse userResponse = userMapper.toResponse(keycloakUserService.createUser(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @PostMapping("/login")

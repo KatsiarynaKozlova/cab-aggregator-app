@@ -1,5 +1,6 @@
 package com.software.modsen.authservice.service;
 
+import com.software.modsen.authservice.exception.InvalidUserDataException;
 import com.software.modsen.authservice.exception.ServiceUnAvailableException;
 import com.software.modsen.authservice.exception.UserAlreadyExistException;
 import com.software.modsen.authservice.exception.WrongCredentialsException;
@@ -48,27 +49,30 @@ public class KeycloakService {
     public User createUser(User user) {
         UserRepresentation userRepresentation = createUserRepresentation(user);
 
-        try {
-            Response response = keycloakConfig.realm(REALM).users().create(userRepresentation);
-            log.info(String.valueOf(response.getStatus()));
-            String id = keycloakConfig.realm(REALM).users().search(user.getUsername()).get(0).getId();
-            RoleRepresentation roleRep = keycloakConfig.realm(REALM).roles().get(user.getRole().toString()).toRepresentation();
-            keycloakConfig.realm(REALM).users().get(id).roles().realmLevel().add(Arrays.asList(roleRep));
+        try (Response response = keycloakConfig.realm(REALM).users().create(userRepresentation)) {
+            if (response.getStatus() == 400) {
+                throw new InvalidUserDataException(ExceptionMessages.INVALID_USER_DATA);
+            }
 
             String locationHeader = response.getHeaderString(LOCATION);
             if (locationHeader == null) {
                 throw new UserAlreadyExistException(ExceptionMessages.ALREADY_EXIST_EXCEPTION);
             }
 
+            String id = keycloakConfig.realm(REALM).users().search(user.getUsername()).get(0).getId();
+            RoleRepresentation roleRep = keycloakConfig.realm(REALM).roles().get(user.getRole().toString()).toRepresentation();
+            keycloakConfig.realm(REALM).users().get(id).roles().realmLevel().add(Arrays.asList(roleRep));
+
             String createdUserId = locationHeader.substring(locationHeader.lastIndexOf("/") + 1);
             user.setId(createdUserId);
 
         } catch (UserAlreadyExistException e) {
             throw new UserAlreadyExistException(e.getMessage());
+        } catch (InvalidUserDataException e) {
+            throw new InvalidUserDataException(e.getMessage());
         } catch (Exception e) {
             throw new ServiceUnAvailableException(ExceptionMessages.SERVICE_IS_NOT_AVAILABLE);
         }
-        // TODO  Define more exceptions
         return user;
     }
 
