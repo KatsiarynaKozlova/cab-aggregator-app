@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ public class PassengerController {
     private final PassengerService passengerService;
     private final PassengerMapper passengerMapper;
 
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER','ROLE_ADMIN')")
     @GetMapping("/{id}")
     @Operation(description = "Get Passenger by ID ",
             parameters = {@Parameter(name = "id", description = "This is the Passenger ID that will be searched for")})
@@ -50,6 +52,7 @@ public class PassengerController {
         return ResponseEntity.ok(passengerResponse);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     @Operation(description = "Get list of all Passengers ")
     @ApiResponse(responseCode = "200", description = "List of all Passengers",
@@ -61,6 +64,7 @@ public class PassengerController {
         return ResponseEntity.ok(new PassengerListResponse(passengerResponseList));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER','ROLE_ADMIN')")
     @PostMapping
     @Operation(description = "Create new Passenger ",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -82,9 +86,10 @@ public class PassengerController {
                 .body(passengerResponse);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER','ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    @Operation(description = "Delete(soft) Passenger bu ID")
+    @Operation(description = "Delete(soft) Passenger by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Delete Passenger"),
             @ApiResponse(responseCode = "404", description = "Passenger not found",
@@ -94,6 +99,7 @@ public class PassengerController {
         passengerService.deletePassenger(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER','ROLE_ADMIN')")
     @PutMapping("/{id}")
     @Operation(description = "Update Passenger ",
             parameters = {@Parameter(name = "id", description = "This is the Passenger ID that will be updated")},

@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class JwtAuthenticationConverterPassenger implements Converter<Jwt, Collection<GrantedAuthority>>{
     @Override
     public Collection<GrantedAuthority> convert(Jwt jwt) {
-        System.out.println(jwt);
         final Map<String, List<String>> realmAccess = (Map<String, List<String>>) jwt.getClaims().get("realm_access");
         return realmAccess.get("roles")
                 .stream()
