@@ -10,10 +10,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.software.modsen.authservice.util.KeycloakConstants.PREFIX_ROLE;
 import static com.software.modsen.authservice.util.KeycloakConstants.REALM_ACCESS;
@@ -28,18 +26,15 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     }
 
     private Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
-        if (jwt.getClaim(REALM_ACCESS) != null) {
-            Map<String, Object> realmAccess = jwt.getClaim(REALM_ACCESS);
-            ObjectMapper mapper = new ObjectMapper();
-            List<String> keycloakRoles = mapper.convertValue(realmAccess.get(ROLES), new TypeReference<List<String>>() {});
-            List<GrantedAuthority> roles = new ArrayList<>();
+        Map<String, List<String>> resourceAccess = jwt.getClaim(REALM_ACCESS);
+        List<String> resourceRoles;
 
-            for (String keyCloakRole : keycloakRoles) {
-                roles.add(new SimpleGrantedAuthority(PREFIX_ROLE + keyCloakRole));
-            }
-
-            return roles;
+        if (resourceAccess == null || (resourceRoles = resourceAccess.get(ROLES)) == null) {
+            return Set.of();
         }
-        return new ArrayList<>();
+
+        return resourceRoles.stream()
+                .map(role -> new SimpleGrantedAuthority(PREFIX_ROLE + role))
+                .collect(Collectors.toList());
     }
 }
