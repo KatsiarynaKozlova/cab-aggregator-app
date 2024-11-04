@@ -979,6 +979,7 @@
       "defaultClientScopes": [
         "web-origins",
         "acr",
+        "User",
         "roles",
         "profile",
         "basic",
@@ -1075,6 +1076,18 @@
           }
         }
       ]
+    },
+    {
+      "id": "c1985f5c-0b29-4b60-a775-b04682671f2b",
+      "name": "id",
+      "description": "",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "false",
+        "display.on.consent.screen": "true",
+        "gui.order": "",
+        "consent.screen.text": ""
+      }
     },
     {
       "id": "337ceb95-ddbd-4eb3-95f0-eacead2fdbe6",
@@ -1471,6 +1484,71 @@
       ]
     },
     {
+      "id": "a3b18fc6-ee50-4bea-bfa0-293ef92a4a3b",
+      "name": "User",
+      "description": "user data",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true",
+        "gui.order": "",
+        "consent.screen.text": ""
+      },
+      "protocolMappers": [
+        {
+          "id": "1ad975b3-bedc-4df2-8460-b5f0dd8ab299",
+          "name": "phone number",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "aggregate.attrs": "false",
+            "introspection.token.claim": "true",
+            "multivalued": "false",
+            "userinfo.token.claim": "true",
+            "user.attribute": "phone",
+            "id.token.claim": "true",
+            "lightweight.claim": "false",
+            "access.token.claim": "true",
+            "claim.name": "phone",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "28bed31a-8e0b-483f-82e8-09d6bb2faefb",
+          "name": "username",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "introspection.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "user.attribute": "username",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "preferred_username",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "e05b9640-1af4-43b8-9a98-45985ae28e27",
+          "name": "email",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "introspection.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "user.attribute": "email",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "email",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    },
+    {
       "id": "d98cd9d2-1a4f-46a6-839c-2e7630878173",
       "name": "microprofile-jwt",
       "description": "Microprofile - JWT built-in scope",
@@ -1624,12 +1702,13 @@
     "roles",
     "web-origins",
     "acr",
-    "basic"
+    "basic",
+    "phone",
+    "User"
   ],
   "defaultOptionalClientScopes": [
     "offline_access",
     "address",
-    "phone",
     "microprofile-jwt",
     "organization"
   ],
