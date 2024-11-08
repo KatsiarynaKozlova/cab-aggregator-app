@@ -1,5 +1,6 @@
 package com.software.modsen.authservice.controller;
 
+import com.software.modsen.authservice.dto.request.FeignUserRequest;
 import com.software.modsen.authservice.dto.request.UserLoginRequest;
 import com.software.modsen.authservice.dto.request.UserRequest;
 import com.software.modsen.authservice.dto.response.UserResponse;
@@ -26,15 +27,15 @@ public class AuthController {
     private final UserLoginMapper userLoginMapper;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest)
-    {
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
         User user = userMapper.toUserModel(userRequest);
-        UserResponse userResponse = userMapper.toResponse(keycloakUserService.createUser(user));
+        FeignUserRequest feignUserRequest = userMapper.toPassengerRequest(userRequest);
+        UserResponse userResponse = userMapper.toResponse(keycloakUserService.createUser(feignUserRequest, user));
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenResponse> login(@RequestBody UserLoginRequest userLoginRequest){
+    public ResponseEntity<AccessTokenResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
         UserLogin userLogin = userLoginMapper.toUserLoginModel(userLoginRequest);
         AccessTokenResponse tokenResponse = keycloakUserService.getUserToken(userLogin);
         return ResponseEntity.ok(tokenResponse);

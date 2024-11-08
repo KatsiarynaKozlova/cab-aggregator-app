@@ -28,7 +28,7 @@ keycloak:
   resource: spring-gateway-client
   bearer-only: true
   client_id: spring-gateway-client
-  secret: ADQ9gpuhamewOvJgYmg6iUgwPExSqSyu
+  secret: R8zZaZmV1sm3vlTGa1Woq7uUbt6LbaAd
   admin_username: admin
   admin_password: admin
 
