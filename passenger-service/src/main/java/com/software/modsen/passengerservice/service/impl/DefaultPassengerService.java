@@ -47,8 +47,8 @@ public class DefaultPassengerService implements PassengerService {
     public Passenger createPassenger(Passenger passengerRequest) {
         validatePassengerCreate(passengerRequest);
         Passenger passenger = passengerRepository.save(passengerRequest);
-        log.info(String.format(LogInfoMessages.CREATE_PASSENGER, passenger.getPassengerId()));
-        PassengerForRating passengerForRating = new PassengerForRating(passenger.getPassengerId());
+        log.info(String.format(LogInfoMessages.CREATE_PASSENGER, passenger.getId()));
+        PassengerForRating passengerForRating = new PassengerForRating(passenger.getId());
         passengerProducer.sendPassengerId(passengerForRating);
         return passenger;
     }
@@ -58,7 +58,7 @@ public class DefaultPassengerService implements PassengerService {
         Passenger passengerOptional = getByIdOrElseThrow(id);
         log.info(String.format(LogInfoMessages.GET_PASSENGER, id));
         validatePassengerUpdate(passenger, passengerOptional);
-        passenger.setPassengerId(id);
+        passenger.setId(id);
         try {
             Passenger updatedPassenger = passengerRepository.save(passenger);
             log.info(String.format(LogInfoMessages.UPDATE_PASSENGER, id));
@@ -87,9 +87,10 @@ public class DefaultPassengerService implements PassengerService {
     }
 
     private void checkPhoneExists(String phone) {
-        if (passengerRepository.existsByPhone(phone))
+        if (passengerRepository.existsByPhone(phone)) {
             log.info(String.format(LogInfoMessages.PASSENGER_WITH_PHONE_ALREADY_EXIST_EXCEPTION, phone));
-        throw new PhoneAlreadyExistException(String.format(PASSENGER_WITH_PHONE_ALREADY_EXIST_EXCEPTION, phone));
+            throw new PhoneAlreadyExistException(String.format(PASSENGER_WITH_PHONE_ALREADY_EXIST_EXCEPTION, phone));
+        }
     }
 
     private void validatePassengerUpdate(Passenger request, Passenger passenger) {
