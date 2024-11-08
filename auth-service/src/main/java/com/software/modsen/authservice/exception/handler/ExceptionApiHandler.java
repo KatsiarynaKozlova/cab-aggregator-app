@@ -19,7 +19,7 @@ public class ExceptionApiHandler {
                 .body(new ErrorMessage(exception.getMessage()));
     }
 
-    @ExceptionHandler({InvalidUserDataException.class, ServiceUnAvailableException.class})
+    @ExceptionHandler(InvalidUserDataException.class)
     public ResponseEntity<ErrorMessage> handleBadRequestException(RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -30,6 +30,13 @@ public class ExceptionApiHandler {
     public ResponseEntity<ErrorMessage> handleUnauthorizedException(RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler( ServiceUnAvailableException.class)
+    public ResponseEntity<ErrorMessage> handleServiceUnAvailableException(RuntimeException exception){
+        return ResponseEntity
+                .status(HttpStatus.BAD_GATEWAY)
                 .body(new ErrorMessage(exception.getMessage()));
     }
 }
