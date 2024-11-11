@@ -25,6 +25,15 @@ spring:
       retries: 3
       linger.ms: 1
       spring.json.add.type.headers: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8100/realms/cab-aggregator-realm
+          jwk-set-uri: http://localhost:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
+logging:
+  level:
+    org.springframework.security: DEBUG
 eureka:
   instance:
     hostname: passenger-service

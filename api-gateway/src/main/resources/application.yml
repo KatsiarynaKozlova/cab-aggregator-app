@@ -30,6 +30,13 @@ spring:
           uri: lb://ride-service
           predicates:
             - Path=/rides/**
+        - id: auth
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+logging:
+  level:
+    org.springframework.security: DEBUG
 eureka:
   instance:
     prefer-ip-address: true

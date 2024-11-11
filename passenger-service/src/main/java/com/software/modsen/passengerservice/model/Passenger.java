@@ -25,8 +25,8 @@ import org.hibernate.annotations.SQLDelete;
 public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "passenger_id")
-    private Long passengerId;
+    @Column(name = "id")
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "email")
