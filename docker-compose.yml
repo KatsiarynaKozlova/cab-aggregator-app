@@ -38,6 +38,8 @@ x-config-eureka-server:
   &spring-config
   environment:
     - eureka.client.service-Url.defaultZone=http://eureka-server:8761/eureka
+    - spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak:8100/realms/cab-aggregator-realm
+    - spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://keycloak:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
 
 x-config-ride-microservice:
   &spring-postgres-ride-database-config
@@ -46,6 +48,8 @@ x-config-ride-microservice:
     - eureka.client.service-Url.defaultZone=http://eureka-server:8761/eureka
     - spring.datasource.password=${POSTGRESQL_PASSWORD}
     - spring.datasource.username=${POSTGRESQL_USERNAME}
+    - spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak:8100/realms/cab-aggregator-realm
+    - spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://keycloak:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
 
 x-config-driver-microservice:
   &spring-postgres-driver-database-config
@@ -54,6 +58,8 @@ x-config-driver-microservice:
     - eureka.client.service-Url.defaultZone=http://eureka-server:8761/eureka
     - spring.datasource.password=${POSTGRESQL_PASSWORD}
     - spring.datasource.username=${POSTGRESQL_USERNAME}
+    - spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak:8100/realms/cab-aggregator-realm
+    - spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://keycloak:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
 
 x-config-rating-microservice:
   &spring-postgres-rating-database-config
@@ -62,6 +68,8 @@ x-config-rating-microservice:
     - eureka.client.service-Url.defaultZone=http://eureka-server:8761/eureka
     - spring.datasource.password=${POSTGRESQL_PASSWORD}
     - spring.datasource.username=${POSTGRESQL_USERNAME}
+    - spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak:8100/realms/cab-aggregator-realm
+    - spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://keycloak:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
 
 x-config-passenger-microservice:
   &spring-postgres-passenger-database-config
@@ -70,6 +78,8 @@ x-config-passenger-microservice:
     - eureka.client.service-Url.defaultZone=http://eureka-server:8761/eureka
     - spring.datasource.password=${POSTGRESQL_PASSWORD}
     - spring.datasource.username=${POSTGRESQL_USERNAME}
+    - spring.security.oauth2.resourceserver.jwt.issuer-uri=http://keycloak:8100/realms/cab-aggregator-realm
+    - spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://keycloak:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
 
 services:
 
@@ -191,6 +201,23 @@ services:
       - eureka-server
     ports:
       - 8080:8080
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: ./Dockerfile
+    image: auth-service:v1.0
+    env_file:
+      - .env
+    ports:
+      - 8099:8099
+    depends_on:
+      - keycloak
+      - eureka-server
+    <<: *spring-config
+    container_name: auth-service
+    networks:
+      - app
 
   kafka:
     image: 'bitnami/kafka:3.7.0'

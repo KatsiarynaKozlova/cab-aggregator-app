@@ -23,7 +23,8 @@ public class PassengerTestUtil {
                 DEFAULT_NAME,
                 DEFAULT_EMAIL,
                 DEFAULT_PHONE,
-                DEFAULT_IS_DELETED
+                DEFAULT_IS_DELETED,
+                1
         );
     }
 
@@ -33,7 +34,8 @@ public class PassengerTestUtil {
                 DEFAULT_NAME,
                 DEFAULT_EMAIL,
                 DEFAULT_PHONE,
-                DEFAULT_IS_DELETED
+                DEFAULT_IS_DELETED,
+                1
         );
     }
 
@@ -68,7 +70,8 @@ public class PassengerTestUtil {
                 DEFAULT_NAME,
                 DEFAULT_EMAIL,
                 DEFAULT_PHONE,
-                DEFAULT_IS_DELETED
+                DEFAULT_IS_DELETED,
+                1
         );
     }
 
@@ -78,7 +81,8 @@ public class PassengerTestUtil {
                 DEFAULT_NAME,
                 NEW_EMAIL,
                 NEW_PHONE,
-                DEFAULT_IS_DELETED
+                DEFAULT_IS_DELETED,
+                1
         );
     }
 

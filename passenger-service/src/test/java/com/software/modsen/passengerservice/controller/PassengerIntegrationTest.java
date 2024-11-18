@@ -60,7 +60,7 @@ public class PassengerIntegrationTest {
         Passenger expectedPassenger = PassengerTestUtil.getDefaultPassenger();
         mockMvc.perform(get("/passengers/{id}", 1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.passengerId").value(expectedPassenger.getPassengerId()))
+                .andExpect(jsonPath("$.passengerId").value(expectedPassenger.getId()))
                 .andExpect(jsonPath("$.name").value(expectedPassenger.getName()))
                 .andExpect(jsonPath("$.email").value(expectedPassenger.getEmail()))
                 .andExpect(jsonPath("$.phone").value(expectedPassenger.getPhone()));
@@ -82,7 +82,7 @@ public class PassengerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedPassenger)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.passengerId").value(expectedPassenger.getPassengerId()))
+                .andExpect(jsonPath("$.passengerId").value(expectedPassenger.getId()))
                 .andExpect(jsonPath("$.name").value(expectedPassenger.getName()))
                 .andExpect(jsonPath("$.email").value(expectedPassenger.getEmail()))
                 .andExpect(jsonPath("$.phone").value(expectedPassenger.getPhone()));
