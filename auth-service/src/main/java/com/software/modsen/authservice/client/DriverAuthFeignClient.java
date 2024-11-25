@@ -22,5 +22,5 @@ public interface DriverAuthFeignClient {
     @Retry(name = "driverFeignClient")
     @CircuitBreaker(name = "driverFeignClient")
     @DeleteMapping("/drivers/{id}")
-    void deleteDriver(@PathVariable Long id);
+    void deleteDriver(@PathVariable String id);
 }

@@ -13,5 +13,5 @@ import lombok.Setter;
 @JsonSerialize
 public class PassengerForRating{
     @JsonProperty("id")
-    private Long id;
+    private String id;
 }

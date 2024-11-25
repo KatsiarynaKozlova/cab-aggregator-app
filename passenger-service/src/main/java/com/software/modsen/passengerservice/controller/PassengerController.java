@@ -46,7 +46,7 @@ public class PassengerController {
             @ApiResponse(responseCode = "404", description = "Passenger not found",
                     content = @Content(schema = @Schema(hidden = true)))}
     )
-    public ResponseEntity<PassengerResponse> getPassengerById(@PathVariable Long id) {
+    public ResponseEntity<PassengerResponse> getPassengerById(@PathVariable String id) {
         Passenger passenger = passengerService.getPassengerById(id);
         PassengerResponse passengerResponse = passengerMapper.toPassengerResponse(passenger);
         return ResponseEntity.ok(passengerResponse);
@@ -95,7 +95,7 @@ public class PassengerController {
             @ApiResponse(responseCode = "404", description = "Passenger not found",
                     content = @Content(schema = @Schema(hidden = true)))
     })
-    public void deletePassenger(@PathVariable Long id) {
+    public void deletePassenger(@PathVariable String id) {
         passengerService.deletePassenger(id);
     }
 
@@ -116,7 +116,7 @@ public class PassengerController {
                     content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseEntity<PassengerResponse> updatePassenger(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestBody PassengerRequest passengerRequest
     ) {
         Passenger newPassenger = passengerMapper.toPassengerEntity(passengerRequest);

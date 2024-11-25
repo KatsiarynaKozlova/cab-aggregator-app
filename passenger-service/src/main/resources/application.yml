@@ -3,11 +3,6 @@ server:
 spring:
   application:
     name: passenger-service
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    username: ${POSTGRESQL_USERNAME}
-    password: ${POSTGRESQL_PASSWORD}
-    url: jdbc:postgresql://localhost:5432/passenger_db
   jpa:
     show-sql: true
     properties:
@@ -31,6 +26,9 @@ spring:
         jwt:
           issuer-uri: http://localhost:8100/realms/cab-aggregator-realm
           jwk-set-uri: http://localhost:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/passenger_db
 logging:
   level:
     org.springframework.security: DEBUG
