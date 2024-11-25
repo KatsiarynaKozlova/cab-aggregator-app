@@ -20,7 +20,6 @@ import java.util.List;
 import static com.software.modsen.passengerservice.util.PassengerTestUtil.DEFAULT_PASSENGER_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,7 +48,7 @@ public class PassengerControllerUnitTest {
     public void testGetPassengerById() {
         Passenger passenger = PassengerTestUtil.getDefaultPassenger();
         PassengerResponse passengerResponse = PassengerTestUtil.getDefaultPassengerResponse();
-        when(passengerService.getPassengerById(anyLong())).thenReturn(passenger);
+        when(passengerService.getPassengerById(any())).thenReturn(passenger);
         when(passengerMapper.toPassengerResponse(any(Passenger.class))).thenReturn(passengerResponse);
 
         ResponseEntity<PassengerResponse> resultResponse = passengerController.getPassengerById(DEFAULT_PASSENGER_ID);
@@ -85,7 +84,7 @@ public class PassengerControllerUnitTest {
         PassengerResponse expectedPassengerResponse = PassengerTestUtil.getDefaultUpdatedPassengerResponse();
 
         when(passengerMapper.toPassengerEntity(any(PassengerRequest.class))).thenReturn(passenger);
-        when(passengerService.updatePassenger(anyLong(), any(Passenger.class))).thenReturn(updatedPassenger);
+        when(passengerService.updatePassenger(any(), any(Passenger.class))).thenReturn(updatedPassenger);
         when(passengerMapper.toPassengerResponse(any(Passenger.class))).thenReturn(expectedPassengerResponse);
 
         ResponseEntity<PassengerResponse> resultResponse = passengerController.updatePassenger(DEFAULT_PASSENGER_ID, passengerRequest);

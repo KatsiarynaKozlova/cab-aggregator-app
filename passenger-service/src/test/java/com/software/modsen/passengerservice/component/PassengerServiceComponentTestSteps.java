@@ -54,8 +54,8 @@ public class PassengerServiceComponentTestSteps {
         assertEquals(phone, passenger.getPhone());
     }
 
-    @Given("Existing Passenger with id {long}")
-    public void existingPassengerWithId(Long passengerId) {
+    @Given("Existing Passenger with id {string}")
+    public void existingPassengerWithId(String passengerId) {
         passenger = new Passenger();
         passenger.setId(passengerId);
     }
@@ -70,11 +70,11 @@ public class PassengerServiceComponentTestSteps {
             return savedPassenger;
         });
 
-        passenger = passengerService.updatePassenger(1L, PassengerTestUtil.getDefaultPreUpdatePassenger());
+        passenger = passengerService.updatePassenger("1", PassengerTestUtil.getDefaultPreUpdatePassenger());
     }
 
-    @Then("The response should have passengerId {long}")
-    public void theResponseShouldHavePassengerId(Long passengerId) {
+    @Then("The response should have passengerId {string}")
+    public void theResponseShouldHavePassengerId(String passengerId) {
         assertEquals(passengerId, passenger.getId());
     }
 
@@ -84,8 +84,8 @@ public class PassengerServiceComponentTestSteps {
         assertEquals(phone, passenger.getPhone());
     }
 
-    @Given("existing Passenger with id {long}, name {string}, email {string}, phone {string}")
-    public void existingPassengerWithIdNameEmailPhone(Long passengerId, String name, String email, String phone) {
+    @Given("existing Passenger with id {string}, name {string}, email {string}, phone {string}")
+    public void existingPassengerWithIdNameEmailPhone(String passengerId, String name, String email, String phone) {
         passenger = new Passenger();
         passenger.setId(passengerId);
         passenger.setPhone(phone);
@@ -93,13 +93,13 @@ public class PassengerServiceComponentTestSteps {
         passenger.setName(name);
     }
 
-    @When("the id {long} is passed to the findById method")
-    public void theIdIsPassedToTheFindByIdMethod(Long id) {
+    @When("the id {string} is passed to the findById method")
+    public void theIdIsPassedToTheFindByIdMethod(String id) {
         when(passengerRepository.findById(id)).thenReturn(Optional.of(passenger));
     }
 
-    @Then("The response should contain passenger with id {long}")
-    public void theResponseShouldContainPassengerWithId(Long passengerId) {
+    @Then("The response should contain passenger with id {string}")
+    public void theResponseShouldContainPassengerWithId(String passengerId) {
         assertEquals(passengerId, passenger.getId());
     }
 }

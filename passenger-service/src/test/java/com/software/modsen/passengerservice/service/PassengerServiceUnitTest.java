@@ -39,14 +39,14 @@ public class PassengerServiceUnitTest {
     private DefaultPassengerService passengerService;
 
     private final Passenger defaultMockPassenger =
-            Passenger.builder().id(1L).name("name").phone("1234567890").email("email@email.com").deleted(false).build();
+            new Passenger("1L", "name", "email@email.com", "1234567890", false, 1);
 
     private final List<Passenger> defaultMockListPassengers = List.of(defaultMockPassenger);
 
     @ParameterizedTest
-    @CsvSource("1")
-    void getPassengerById_shouldReturnPassenger(Long id) {
-        when(passengerRepository.findById(anyLong())).thenReturn(Optional.of(defaultMockPassenger));
+    @CsvSource("1L")
+    void getPassengerById_shouldReturnPassenger(String id) {
+        when(passengerRepository.findById(any())).thenReturn(Optional.of(defaultMockPassenger));
 
         Passenger passenger = passengerService.getPassengerById(id);
 
@@ -56,8 +56,8 @@ public class PassengerServiceUnitTest {
     }
 
     @ParameterizedTest
-    @CsvSource("2")
-    void getPassengerById_shouldThrowNotFoundException(Long id) {
+    @CsvSource("2L")
+    void getPassengerById_shouldThrowNotFoundException(String id) {
         assertThrows(PassengerNotFoundException.class, () -> passengerService.getPassengerById(id));
 
         verify(passengerRepository, times(1)).findById(id);
@@ -121,9 +121,9 @@ public class PassengerServiceUnitTest {
     }
 
     @ParameterizedTest
-    @CsvSource("1")
-    void updatePassengerById_shouldReturnPassenger(Long id) {
-        when(passengerRepository.findById(anyLong())).thenReturn(Optional.of(defaultMockPassenger));
+    @CsvSource("1L")
+    void updatePassengerById_shouldReturnPassenger(String id) {
+        when(passengerRepository.findById(any())).thenReturn(Optional.of(defaultMockPassenger));
         when(passengerRepository.save(any(Passenger.class))).thenReturn(defaultMockPassenger);
 
         Passenger updatedPassenger = passengerService.updatePassenger(id, defaultMockPassenger);
@@ -135,8 +135,8 @@ public class PassengerServiceUnitTest {
     }
 
     @ParameterizedTest
-    @CsvSource("2")
-    void updatePassengerById_shouldThrowPassengerNorFoundException(Long id) {
+    @CsvSource("2L")
+    void updatePassengerById_shouldThrowPassengerNorFoundException(String id) {
         assertThrows(PassengerNotFoundException.class, () -> passengerService.updatePassenger(id, defaultMockPassenger));
         verify(passengerRepository, times(1)).findById(id);
     }
@@ -193,15 +193,15 @@ public class PassengerServiceUnitTest {
 
     @Test
     void testDeletePassenger_Success() {
-        Long passengerId = 1L;
+        String passengerId = "1L";
         passengerService.deletePassenger(passengerId);
         verify(passengerRepository, times(1)).deleteById(passengerId);
     }
 
     @ParameterizedTest
-    @CsvSource("1")
-    void testUpdatePassenger_PassengerNotFound(Long id) {
-        when(passengerRepository.findById(anyLong())).thenReturn(Optional.empty());
+    @CsvSource("1L")
+    void testUpdatePassenger_PassengerNotFound(String id) {
+        when(passengerRepository.findById(any())).thenReturn(Optional.empty());
         assertThrows(
                 PassengerNotFoundException.class,
                 () -> passengerService.updatePassenger(id, defaultMockPassenger)
