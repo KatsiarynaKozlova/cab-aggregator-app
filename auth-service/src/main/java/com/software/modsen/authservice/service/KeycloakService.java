@@ -28,7 +28,15 @@ import java.util.List;
 import java.util.Map;
 
 import static com.software.modsen.authservice.util.ExceptionMessages.UNAUTHORIZED_EXCEPTION;
-import static com.software.modsen.authservice.util.KeycloakConstants.*;
+import static com.software.modsen.authservice.util.KeycloakConstants.ID;
+import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_ADMIN_PASSWORD;
+import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_ADMIN_USERNAME;
+import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_CLIENT_ID;
+import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_CLIENT_SECRET;
+import static com.software.modsen.authservice.util.KeycloakConstants.LOCATION;
+import static com.software.modsen.authservice.util.KeycloakConstants.PHONE;
+import static com.software.modsen.authservice.util.KeycloakConstants.REALM;
+import static com.software.modsen.authservice.util.KeycloakConstants.SERVER_URL;
 
 @Slf4j
 @Service
