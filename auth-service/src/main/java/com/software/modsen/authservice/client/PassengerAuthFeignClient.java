@@ -22,5 +22,5 @@ public interface PassengerAuthFeignClient {
     @Retry(name = "passengerFeignClient")
     @CircuitBreaker(name = "passengerFeignClient")
     @DeleteMapping("/passengers/{id}")
-    void deletePassenger(@PathVariable String id);
+    void deletePassenger(@PathVariable Long id);
 }

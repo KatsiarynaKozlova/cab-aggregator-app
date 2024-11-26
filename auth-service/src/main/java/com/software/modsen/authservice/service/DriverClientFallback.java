@@ -20,7 +20,7 @@ public class DriverClientFallback {
 
     @Retry(name = "driverFeignClient")
     @CircuitBreaker(name = "driverFeignClient")
-    public void deleteUser(String id) {
+    public void deleteUser(Long id) {
         driverAuthFeignClient.deleteDriver(id);
     }
 }

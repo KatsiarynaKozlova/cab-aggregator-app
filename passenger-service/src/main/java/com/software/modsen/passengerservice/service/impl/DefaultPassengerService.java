@@ -27,9 +27,10 @@ import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSEN
 public class DefaultPassengerService implements PassengerService {
     private final PassengerRepository passengerRepository;
     private final PassengerProducer passengerProducer;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Override
-    public Passenger getPassengerById(String id) {
+    public Passenger getPassengerById(Long id) {
         Passenger passenger = getByIdOrElseThrow(id);
         log.info(String.format(LogInfoMessages.GET_PASSENGER, id));
         return passenger;
@@ -45,6 +46,7 @@ public class DefaultPassengerService implements PassengerService {
     @Override
     public Passenger createPassenger(Passenger passengerRequest) {
         validatePassengerCreate(passengerRequest);
+        passengerRequest.setId(sequenceGeneratorService.generateSequence(Passenger.class.getSimpleName()));
         Passenger passenger = passengerRepository.save(passengerRequest);
         log.info(String.format(LogInfoMessages.CREATE_PASSENGER, passenger.getId()));
         PassengerForRating passengerForRating = new PassengerForRating(passenger.getId());
@@ -53,7 +55,7 @@ public class DefaultPassengerService implements PassengerService {
     }
 
     @Override
-    public Passenger updatePassenger(String id, Passenger passenger) {
+    public Passenger updatePassenger(Long id, Passenger passenger) {
         Passenger passengerOptional = getByIdOrElseThrow(id);
         log.info(String.format(LogInfoMessages.GET_PASSENGER, id));
         validatePassengerUpdate(passenger, passengerOptional);
@@ -68,12 +70,12 @@ public class DefaultPassengerService implements PassengerService {
     }
 
     @Override
-    public void deletePassenger(String id) {
+    public void deletePassenger(Long id) {
         passengerRepository.deleteById(id);
         log.info(String.format(LogInfoMessages.DELETE_PASSENGER, id));
     }
 
-    private Passenger getByIdOrElseThrow(String id) {
+    private Passenger getByIdOrElseThrow(Long id) {
         return passengerRepository.findById(id)
                 .orElseThrow(() -> new PassengerNotFoundException(String.format(PASSENGER_NOT_FOUND_EXCEPTION, id)));
     }

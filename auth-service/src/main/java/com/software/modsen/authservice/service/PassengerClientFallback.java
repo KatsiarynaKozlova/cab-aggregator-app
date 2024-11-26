@@ -21,7 +21,7 @@ public class PassengerClientFallback {
 
     @Retry(name = "passengerFeignClient")
     @CircuitBreaker(name = "passengerFeignClient")
-    public void deleteUser(String id) {
+    public void deleteUser(Long id) {
         passengerAuthFeignClient.deletePassenger(id);
     }
 }

@@ -16,7 +16,7 @@ spring:
              scope: openid, profile, email
          provider:
            keycloak:
-             issuer-uri: http://localhost:8100/realms/cab-aggregator-realm
+             issuer-uri: http://keycloak:8100/realms/cab-aggregator-realm
        resourceserver:
           jwt:
             issuer-uri: http://localhost:8100/realms/cab-aggregator-realm

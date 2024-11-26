@@ -63,7 +63,7 @@ public class KeycloakService {
         }
     }
 
-    private void deleteUserFeign(Role role, String id){
+    private void deleteUserFeign(Role role, Long id){
         if (role.name().equals(Role.PASSENGER.name())) {
             passengerClient.deleteUser(id);
         }
@@ -141,7 +141,7 @@ public class KeycloakService {
         userRepresentation.setEmailVerified(user.getIsEmailVerified());
 
         Map<String, List<String>> attributesMap = new HashMap<>();
-        attributesMap.put(ID, List.of(user.getId()));
+        attributesMap.put(ID, List.of(user.getId().toString()));
         attributesMap.put(PHONE, List.of(user.getPhone()));
         userRepresentation.setAttributes(attributesMap);
 
