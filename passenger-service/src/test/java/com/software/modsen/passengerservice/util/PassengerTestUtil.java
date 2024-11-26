@@ -9,7 +9,7 @@ import java.util.Locale;
 
 @UtilityClass
 public class PassengerTestUtil {
-    public static final String DEFAULT_PASSENGER_ID = "1L";
+    public static final Long DEFAULT_PASSENGER_ID = 1L;
     public static final String DEFAULT_NAME = "George";
     public static final String DEFAULT_EMAIL = "dnsauto@mail.ru";
     public static final String DEFAULT_PHONE = "1234567890";
