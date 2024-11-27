@@ -5,6 +5,7 @@ import com.software.modsen.passengerservice.kafka.producer.PassengerProducer;
 import com.software.modsen.passengerservice.model.Passenger;
 import com.software.modsen.passengerservice.repository.PassengerRepository;
 import com.software.modsen.passengerservice.service.impl.DefaultPassengerService;
+import com.software.modsen.passengerservice.service.impl.SequenceGeneratorService;
 import com.software.modsen.passengerservice.util.PassengerTestUtil;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -27,6 +28,8 @@ public class PassengerServiceComponentTestSteps {
     private DefaultPassengerService passengerService;
     @Mock
     private PassengerRepository passengerRepository;
+    @Mock
+    private SequenceGeneratorService sequenceGeneratorService;
     @Mock
     private PassengerProducer passengerProducer;
     private Passenger passenger = new Passenger();
@@ -57,12 +60,12 @@ public class PassengerServiceComponentTestSteps {
     @Given("Existing Passenger with id {long}")
     public void existingPassengerWithId(Long passengerId) {
         passenger = new Passenger();
-        passenger.setPassengerId(passengerId);
+        passenger.setId(passengerId);
     }
 
     @When("update passenger with email {string}, phone {string}")
     public void updatePassengerWithEmailPhone(String email, String phone) {
-        when(passengerRepository.findById(passenger.getPassengerId())).thenReturn(Optional.of(passenger));
+        when(passengerRepository.findById(passenger.getId())).thenReturn(Optional.of(passenger));
         when(passengerRepository.save(any(Passenger.class))).thenAnswer(invocation -> {
             Passenger savedPassenger = invocation.getArgument(0);
             savedPassenger.setEmail(email);
@@ -75,7 +78,7 @@ public class PassengerServiceComponentTestSteps {
 
     @Then("The response should have passengerId {long}")
     public void theResponseShouldHavePassengerId(Long passengerId) {
-        assertEquals(passengerId, passenger.getPassengerId());
+        assertEquals(passengerId, passenger.getId());
     }
 
     @And("Response have email {string}, phone {string}")
@@ -87,7 +90,7 @@ public class PassengerServiceComponentTestSteps {
     @Given("existing Passenger with id {long}, name {string}, email {string}, phone {string}")
     public void existingPassengerWithIdNameEmailPhone(Long passengerId, String name, String email, String phone) {
         passenger = new Passenger();
-        passenger.setPassengerId(passengerId);
+        passenger.setId(passengerId);
         passenger.setPhone(phone);
         passenger.setEmail(email);
         passenger.setName(name);
@@ -100,6 +103,6 @@ public class PassengerServiceComponentTestSteps {
 
     @Then("The response should contain passenger with id {long}")
     public void theResponseShouldContainPassengerWithId(Long passengerId) {
-        assertEquals(passengerId, passenger.getPassengerId());
+        assertEquals(passengerId, passenger.getId());
     }
 }

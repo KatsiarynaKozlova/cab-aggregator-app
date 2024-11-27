@@ -7,6 +7,7 @@ import com.software.modsen.passengerservice.kafka.producer.PassengerProducer;
 import com.software.modsen.passengerservice.model.Passenger;
 import com.software.modsen.passengerservice.repository.PassengerRepository;
 import com.software.modsen.passengerservice.service.impl.DefaultPassengerService;
+import com.software.modsen.passengerservice.service.impl.SequenceGeneratorService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,11 +38,13 @@ public class PassengerServiceUnitTest {
     private PassengerRepository passengerRepository;
     @Mock
     private PassengerProducer passengerProducer;
+    @Mock
+    private SequenceGeneratorService sequenceGeneratorService;
     @InjectMocks
     private DefaultPassengerService passengerService;
 
     private final Passenger defaultMockPassenger =
-            Passenger.builder().passengerId(1L).name("name").phone("1234567890").email("email@email.com").deleted(false).build();
+            new Passenger(1L, "name", "email@email.com", "1234567890", false, 1);
 
     private final List<Passenger> defaultMockListPassengers = List.of(defaultMockPassenger);
 
@@ -51,7 +56,7 @@ public class PassengerServiceUnitTest {
         Passenger passenger = passengerService.getPassengerById(id);
 
         assertNotNull(passenger);
-        assertEquals(id, passenger.getPassengerId());
+        assertEquals(id, passenger.getId());
         verify(passengerRepository, times(1)).findById(id);
     }
 
@@ -158,15 +163,15 @@ public class PassengerServiceUnitTest {
         Passenger updatedPassenger = new Passenger();
         updatedPassenger.setEmail(email);
 
-        when(passengerRepository.findById(defaultMockPassenger.getPassengerId())).thenReturn(Optional.of(defaultMockPassenger));
+        when(passengerRepository.findById(defaultMockPassenger.getId())).thenReturn(Optional.of(defaultMockPassenger));
         when(passengerRepository.existsByEmail(anyString())).thenReturn(true);
 
         assertThrows(
                 EmailAlreadyExistException.class,
-                () -> passengerService.updatePassenger(defaultMockPassenger.getPassengerId(), updatedPassenger)
+                () -> passengerService.updatePassenger(defaultMockPassenger.getId(), updatedPassenger)
         );
 
-        verify(passengerRepository, times(1)).findById(defaultMockPassenger.getPassengerId());
+        verify(passengerRepository, times(1)).findById(defaultMockPassenger.getId());
         verify(passengerRepository, times(1)).existsByEmail(email);
         verify(passengerRepository, never()).save(any(Passenger.class));
     }
@@ -178,15 +183,15 @@ public class PassengerServiceUnitTest {
         updatedPassenger.setPhone(phone);
         updatedPassenger.setEmail(defaultMockPassenger.getEmail());
 
-        when(passengerRepository.findById(defaultMockPassenger.getPassengerId())).thenReturn(Optional.of(defaultMockPassenger));
+        when(passengerRepository.findById(defaultMockPassenger.getId())).thenReturn(Optional.of(defaultMockPassenger));
         when(passengerRepository.existsByPhone(anyString())).thenReturn(true);
 
         assertThrows(
                 PhoneAlreadyExistException.class,
-                () -> passengerService.updatePassenger(defaultMockPassenger.getPassengerId(), updatedPassenger)
+                () -> passengerService.updatePassenger(defaultMockPassenger.getId(), updatedPassenger)
         );
 
-        verify(passengerRepository, times(1)).findById(defaultMockPassenger.getPassengerId());
+        verify(passengerRepository, times(1)).findById(defaultMockPassenger.getId());
         verify(passengerRepository, times(1)).existsByPhone(phone);
         verify(passengerRepository, never()).save(any(Passenger.class));
     }

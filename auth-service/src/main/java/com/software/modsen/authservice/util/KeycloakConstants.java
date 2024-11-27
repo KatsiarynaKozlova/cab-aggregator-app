@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class KeycloakConstants {
     public static final String PHONE = "phone";
+    public static final String ID = "id";
     public static final String LOCATION = "Location";
     public static final String REALM_ACCESS = "realm_access";
     public static final String ROLES = "roles";

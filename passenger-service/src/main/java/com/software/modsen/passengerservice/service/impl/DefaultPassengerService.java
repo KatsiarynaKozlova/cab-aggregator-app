@@ -11,7 +11,6 @@ import com.software.modsen.passengerservice.repository.PassengerRepository;
 import com.software.modsen.passengerservice.service.PassengerService;
 import com.software.modsen.passengerservice.util.ExceptionMessages;
 import com.software.modsen.passengerservice.util.LogInfoMessages;
-import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,7 @@ import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSEN
 public class DefaultPassengerService implements PassengerService {
     private final PassengerRepository passengerRepository;
     private final PassengerProducer passengerProducer;
+    private final SequenceGeneratorService sequenceGeneratorService;
 
     @Override
     public Passenger getPassengerById(Long id) {
@@ -46,6 +46,7 @@ public class DefaultPassengerService implements PassengerService {
     @Override
     public Passenger createPassenger(Passenger passengerRequest) {
         validatePassengerCreate(passengerRequest);
+        passengerRequest.setId(sequenceGeneratorService.generateSequence(Passenger.class.getSimpleName()));
         Passenger passenger = passengerRepository.save(passengerRequest);
         log.info(String.format(LogInfoMessages.CREATE_PASSENGER, passenger.getId()));
         PassengerForRating passengerForRating = new PassengerForRating(passenger.getId());
@@ -62,8 +63,8 @@ public class DefaultPassengerService implements PassengerService {
         try {
             Passenger updatedPassenger = passengerRepository.save(passenger);
             log.info(String.format(LogInfoMessages.UPDATE_PASSENGER, id));
-            return passengerRepository.save(updatedPassenger);
-        } catch (OptimisticLockException e) {
+            return updatedPassenger;
+        } catch (Exception e) {
             throw new PassengerUpdateLockException(ExceptionMessages.TRY_AGAIN_LATER);
         }
     }

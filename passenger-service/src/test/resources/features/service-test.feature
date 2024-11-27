@@ -14,6 +14,3 @@ Feature: Passenger service test
     Given existing Passenger with id 1, name "Leon", email "gunboy@gmail.com", phone "1357908642"
     When the id 1 is passed to the findById method
     Then The response should contain passenger with id 1
-
-
-
