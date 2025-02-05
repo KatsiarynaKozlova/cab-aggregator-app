@@ -34,6 +34,7 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+    com.software.modsen.passengerservice.service: INFO
 eureka:
   instance:
     hostname: passenger-service

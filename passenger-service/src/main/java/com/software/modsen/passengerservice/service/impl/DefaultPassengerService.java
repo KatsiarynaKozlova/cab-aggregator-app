@@ -28,11 +28,18 @@ import static com.software.modsen.passengerservice.util.ExceptionMessages.PASSEN
 public class DefaultPassengerService implements PassengerService {
     private final PassengerRepository passengerRepository;
     private final PassengerProducer passengerProducer;
+    private final RedisService redisService;
 
     @Override
     public Passenger getPassengerById(Long id) {
+        Passenger cachedPassenger = redisService.getPassengerByIdFromCache(id);
+        if (cachedPassenger != null) {
+            log.info(String.format(LogInfoMessages.GET_PASSENGER_FROM_CACHE, id));
+            return cachedPassenger;
+        }
         Passenger passenger = getByIdOrElseThrow(id);
         log.info(String.format(LogInfoMessages.GET_PASSENGER, id));
+        redisService.setPassenger(passenger.getId(), passenger);
         return passenger;
     }
 
@@ -48,6 +55,7 @@ public class DefaultPassengerService implements PassengerService {
         validatePassengerCreate(passengerRequest);
         Passenger passenger = passengerRepository.save(passengerRequest);
         log.info(String.format(LogInfoMessages.CREATE_PASSENGER, passenger.getId()));
+        redisService.setPassenger(passenger.getId(), passenger);
         PassengerForRating passengerForRating = new PassengerForRating(passenger.getId());
         passengerProducer.sendPassengerId(passengerForRating);
         return passenger;
@@ -62,6 +70,7 @@ public class DefaultPassengerService implements PassengerService {
         try {
             Passenger updatedPassenger = passengerRepository.save(passenger);
             log.info(String.format(LogInfoMessages.UPDATE_PASSENGER, id));
+            redisService.setPassenger(id, updatedPassenger);
             return passengerRepository.save(updatedPassenger);
         } catch (OptimisticLockException e) {
             throw new PassengerUpdateLockException(ExceptionMessages.TRY_AGAIN_LATER);
@@ -71,6 +80,7 @@ public class DefaultPassengerService implements PassengerService {
     @Override
     public void deletePassenger(Long id) {
         passengerRepository.deleteById(id);
+        redisService.deletePassenger(id);
         log.info(String.format(LogInfoMessages.DELETE_PASSENGER, id));
     }
 

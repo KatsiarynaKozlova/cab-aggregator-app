@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "passengers")
 @SQLDelete(sql = "UPDATE passengers SET is_deleted = true WHERE passenger_id=?")
@@ -22,7 +24,7 @@ import org.hibernate.annotations.SQLDelete;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Passenger {
+public class Passenger implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
