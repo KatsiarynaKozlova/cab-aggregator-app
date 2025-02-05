@@ -358,7 +358,7 @@ services:
       - redis-cluster-2
       - redis-cluster-3
     ports:
-      - 6379:6379
+      - 6389:6389
     networks:
       - app
 
