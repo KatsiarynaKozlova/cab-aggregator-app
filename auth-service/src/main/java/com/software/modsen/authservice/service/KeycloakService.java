@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.software.modsen.authservice.util.ExceptionMessages.UNAUTHORIZED_EXCEPTION;
+import static com.software.modsen.authservice.util.KeycloakConstants.ID;
 import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_ADMIN_PASSWORD;
 import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_ADMIN_USERNAME;
 import static com.software.modsen.authservice.util.KeycloakConstants.KEYCLOAK_CLIENT_ID;
@@ -148,7 +149,7 @@ public class KeycloakService {
         userRepresentation.setEmailVerified(user.getIsEmailVerified());
 
         Map<String, List<String>> attributesMap = new HashMap<>();
-        attributesMap.put("id", List.of("1"));
+        attributesMap.put(ID, List.of(user.getId().toString()));
         attributesMap.put(PHONE, List.of(user.getPhone()));
         userRepresentation.setAttributes(attributesMap);
 

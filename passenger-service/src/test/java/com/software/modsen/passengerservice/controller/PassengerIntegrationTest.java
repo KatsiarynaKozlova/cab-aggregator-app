@@ -6,17 +6,17 @@ import com.software.modsen.passengerservice.config.KafkaContainerConfiguration;
 import com.software.modsen.passengerservice.dto.request.PassengerRequest;
 import com.software.modsen.passengerservice.model.Passenger;
 import com.software.modsen.passengerservice.util.PassengerTestUtil;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static com.software.modsen.passengerservice.util.PassengerTestUtil.DEFAULT_PASSENGER_ID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,10 +25,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@WithMockUser(roles = "ADMIN")
 @Import({DatabaseContainerConfiguration.class, KafkaContainerConfiguration.class})
 public class PassengerIntegrationTest {
     @Autowired
@@ -51,7 +52,7 @@ public class PassengerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newPassengerRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.passengerId").value(DEFAULT_PASSENGER_ID));
+                .andExpect(jsonPath("$.id").value(DEFAULT_PASSENGER_ID));
     }
 
     @Test
@@ -60,7 +61,7 @@ public class PassengerIntegrationTest {
         Passenger expectedPassenger = PassengerTestUtil.getDefaultPassenger();
         mockMvc.perform(get("/passengers/{id}", 1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.passengerId").value(expectedPassenger.getPassengerId()))
+                .andExpect(jsonPath("$.id").value(expectedPassenger.getId()))
                 .andExpect(jsonPath("$.name").value(expectedPassenger.getName()))
                 .andExpect(jsonPath("$.email").value(expectedPassenger.getEmail()))
                 .andExpect(jsonPath("$.phone").value(expectedPassenger.getPhone()));
@@ -82,7 +83,7 @@ public class PassengerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedPassenger)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.passengerId").value(expectedPassenger.getPassengerId()))
+                .andExpect(jsonPath("$.id").value(expectedPassenger.getId()))
                 .andExpect(jsonPath("$.name").value(expectedPassenger.getName()))
                 .andExpect(jsonPath("$.email").value(expectedPassenger.getEmail()))
                 .andExpect(jsonPath("$.phone").value(expectedPassenger.getPhone()));
