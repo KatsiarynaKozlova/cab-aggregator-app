@@ -4,23 +4,29 @@ spring:
   application:
     name: auth-service
   security:
-     oauth2:
-       client:
-         registration:
-           keycloak:
-             provider: keycloak
-             client-id: spring-gateway-client
-             client-secret: ADQ9gpuhamewOvJgYmg6iUgwPExSqSyu
-             authorization-grant-type: password
-             redirect-uri: '{baseUrl}/login/oauth2/code/keycloak'
-             scope: openid, profile, email
-         provider:
-           keycloak:
-             issuer-uri: http://localhost:8100/realms/cab-aggregator-realm
-       resourceserver:
-          jwt:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: spring-gateway-client
+            client-secret: yhAzaMIv6MeM5rgLhU7Z0677kWbxDIjH
+            authorization-grant-type: password
+            redirect-uri: '{baseUrl}/login/oauth2/code/keycloak'
+            scope: openid, profile, email
+        provider:
+          keycloak:
             issuer-uri: http://localhost:8100/realms/cab-aggregator-realm
-            jwk-set-uri: http://localhost:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8100/realms/cab-aggregator-realm
+          jwk-set-uri: http://localhost:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
+logging:
+  file:
+    name: logs/application.log
+  level:
+    com.software.modsen.authservice: DEBUG
+    com.software.modsen.authservice.service: INFO
 
 keycloak:
   server-url: http://localhost:8100
@@ -28,7 +34,7 @@ keycloak:
   resource: spring-gateway-client
   bearer-only: true
   client_id: spring-gateway-client
-  secret: R8zZaZmV1sm3vlTGa1Woq7uUbt6LbaAd
+  secret: yhAzaMIv6MeM5rgLhU7Z0677kWbxDIjH
   admin_username: admin
   admin_password: admin
 
