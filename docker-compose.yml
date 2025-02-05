@@ -269,11 +269,11 @@ services:
     image: quay.io/keycloak/keycloak:26.0.1
     container_name: keycloak
     <<: *keycloak-connection-data
-    command: ['start-dev',
-              '--http-port=8100',
-              '--import-realm']
+    command: [ 'start-dev',
+               '--http-port=8100',
+               '--import-realm' ]
     depends_on:
-     - postgresql
+      - postgresql
     ports:
       - 8100:8100
     volumes:
@@ -285,7 +285,7 @@ services:
     image: redis:latest
     container_name: redis-master-sentinel
     hostname: redis-master-sentinel
-    command: ["redis-server", "--appendonly", "yes"]
+    command: [ "redis-server", "--appendonly", "yes" ]
     ports:
       - 6379:6379
     networks:
@@ -305,23 +305,23 @@ services:
     container_name: sentinel
     volumes:
       - ./redis-sentinel/sentinel.conf:/usr/local/etc/redis/sentinel.conf
-    command: ["redis-sentinel", "/usr/local/etc/redis/sentinel.conf"]
+    command: [ "redis-sentinel", "/usr/local/etc/redis/sentinel.conf" ]
     ports:
       - 26379:26379
     networks:
-     - app
+      - app
 
   redis-insight:
     image: redis/redisinsight:latest
     container_name: redis-insight
     ports:
-     - 5540:5540
+      - 5540:5540
     networks:
       - app
 
   redis-cluster-1:
     image: redis:latest
-    command: ["redis-server", "--port", "6381", "--cluster-enabled", "yes", "--cluster-node-timeout", "2000" ,"--appendonly yes"]
+    command: [ "redis-server", "--port", "6381", "--cluster-enabled", "yes", "--cluster-node-timeout", "2000" ,"--appendonly", "yes" ]
     container_name: redis-cluster-1
     hostname: redis-cluster-1
     ports:
@@ -331,7 +331,7 @@ services:
 
   redis-cluster-2:
     image: redis:latest
-    command: ["redis-server", "--port", "6382", "--cluster-enabled", "yes", "--cluster-node-timeout", "2000" ,"--appendonly yes"]
+    command: [ "redis-server", "--port", "6382", "--cluster-enabled", "yes", "--cluster-node-timeout", "2000" ,"--appendonly","yes" ]
     container_name: redis-cluster-2
     hostname: redis-cluster-2
     ports:
@@ -341,7 +341,7 @@ services:
 
   redis-cluster-3:
     image: redis:latest
-    command: ["redis-server", "--port", "6383", "--cluster-enabled", "yes", "--cluster-node-timeout", "2000" ,"--appendonly yes"]
+    command: [ "redis-server", "--port", "6383", "--cluster-enabled", "yes", "--cluster-node-timeout", "2000" ,"--appendonly","yes" ]
     container_name: redis-cluster-3
     hostname: redis-cluster-3
     ports:
@@ -352,7 +352,7 @@ services:
   redis-cluster:
     image: redis:latest
     container_name: redis-cluster
-    command: ["redis-cli", "--cluster", "create" ,"redis-cluster-1:6381", "redis-cluster-2:6382", "redis-cluster-3:6383", "--cluster-replicas", "0", "--cluster-yes"]
+    command: [ "redis-cli", "--cluster", "create" ,"redis-cluster-1:6381", "redis-cluster-2:6382", "redis-cluster-3:6383", "--cluster-replicas", "0", "--cluster-yes" ]
     depends_on:
       - redis-cluster-1
       - redis-cluster-2
