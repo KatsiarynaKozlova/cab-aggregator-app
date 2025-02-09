@@ -2,6 +2,7 @@ package com.software.modsen.passengerservice.util;
 
 public final class LogInfoMessages {
     public static final String GET_PASSENGER = "get passenger with id '%s'";
+    public static final String GET_PASSENGER_FROM_CACHE = "get passenger from cache with id '%s'";
     public static final String GET_LIST_OF_PASSENGERS = "get list of passengers";
     public static final String CREATE_PASSENGER = "create passenger with id '%s'";
     public static final String SEND_PRODUCER_MESSAGE = "send id '%s' to kafka";

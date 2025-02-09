@@ -37,8 +37,14 @@
 		<spring-cloud-commons.version>4.1.4</spring-cloud-commons.version>
 		<spring-cloud-starter-circuitbreaker-resilience4j.version>3.1.2</spring-cloud-starter-circuitbreaker-resilience4j.version>
 		<resilience4j.version>2.2.0</resilience4j.version>
+		<spring-boot-starter-aop.version>3.4.1</spring-boot-starter-aop.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+			<version>${spring-boot-starter-aop.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>

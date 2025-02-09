@@ -14,4 +14,16 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </logger>
+    <appender name="TIME_METHOD_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/time-method-executor.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/time-method-executor.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.software.modsen.passengerservice.log.TimeMethodExecutorLogger" level="INFO" additivity="false">
+        <appender-ref ref="TIME_METHOD_LOG_FILE" />
+    </logger>
 </configuration>
